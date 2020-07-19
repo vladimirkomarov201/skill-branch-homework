@@ -11,7 +11,14 @@ object UserHolder {
         email: String,
         password: String
     ): User{
-        TODO("not implemented")
+        return User.makeUser(fullName, email, password)
+            .also {
+                if (map[it.login] != null)
+                    throw IllegalArgumentException("A user with this email already exists")
+                else
+                    map[it.login] = it
+            }
+
     }
 
     fun login(login: String, password: String): String?{
@@ -19,7 +26,25 @@ object UserHolder {
     }
 
     fun registerUserByPhone(fullName: String, rawPhone: String): User{
-        TODO("not implemented")
+        val phone = rawPhone.replace("""[^+\d]""".toRegex(), "")
+        when{
+            phone.length != 12 -> throw IllegalArgumentException("Enter a valid phone number starting with a + and containing 11 digits")
+            map.filter { it.value.phone == phone }.isNotEmpty() -> throw IllegalArgumentException("A user with this phone already exists")
+        }
+        return User.makeUser(fullName, phone = rawPhone)
+    }
+
+    fun loginUser(login: String, password: String): String?{
+        map[login].also {
+            return if (it == null || !it.checkPassword(password))
+                null
+            else
+                it.userInfo
+        }
+    }
+
+    fun requestAccessCode(login: String){
+        map[login]?.updateAccessCode()
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
