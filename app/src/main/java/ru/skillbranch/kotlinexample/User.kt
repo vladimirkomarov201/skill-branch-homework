@@ -49,19 +49,25 @@ class User private constructor(
 
     private lateinit var passwordHash: String
 
-    val userInfo: String = """
-      firstName: $firstName
-      lastName: $lastName
-      login: $login
-      fullName: $fullName
-      initials: $initials
-      email: $email
-      phone: $phone
-      meta: $meta
-    """.trimIndent()
+    val userInfo: String
 
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     var accessCode: String? = null
+
+    init {
+        phone = rawPhone
+        login = email ?: phone!!
+        userInfo = """
+          firstName: $firstName
+          lastName: $lastName
+          login: $login
+          fullName: $fullName
+          initials: $initials
+          email: $email
+          phone: $phone
+          meta: $meta
+        """.trimIndent()
+    }
 
     constructor(
         firstName: String,
@@ -144,7 +150,7 @@ class User private constructor(
         }
 
         private fun String.fullNameToPair(): Pair<String, String?>{
-            return this.split("")
+            return this.split(" ")
                 .filter { it.isNotBlank() }
                 .run {
                     when(size){

@@ -31,11 +31,14 @@ object UserHolder {
             phone.length != 12 -> throw IllegalArgumentException("Enter a valid phone number starting with a + and containing 11 digits")
             map.filter { it.value.phone == phone }.isNotEmpty() -> throw IllegalArgumentException("A user with this phone already exists")
         }
-        return User.makeUser(fullName, phone = rawPhone)
+        return User.makeUser(fullName, phone = rawPhone).also {
+            map[phone] = it
+        }
     }
 
     fun loginUser(login: String, password: String): String?{
-        map[login].also {
+        val key = if (login.startsWith("+")) login.replace("""[^+\d]""".toRegex(), "") else login
+        map[key].also {
             return if (it == null || !it.checkPassword(password))
                 null
             else
@@ -44,7 +47,12 @@ object UserHolder {
     }
 
     fun requestAccessCode(login: String){
-        map[login]?.updateAccessCode()
+        val key = if (login.startsWith("+")) login.replace("""[^+\d]""".toRegex(), "") else login
+        map[key]?.also {
+            it.updateAccessCode()
+        }.let {
+            map[key] = it ?: return
+        }
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
