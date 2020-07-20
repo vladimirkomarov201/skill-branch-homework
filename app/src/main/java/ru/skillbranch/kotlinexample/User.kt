@@ -13,10 +13,6 @@ class User private constructor(
     meta: Map<String, Any>? = null
 ){
 
-//    val firstName: String
-//    val lastName: String?
-
-
     private val fullName: String
         get() = listOfNotNull(firstName, lastName)
             .joinToString(" ")
@@ -43,9 +39,7 @@ class User private constructor(
 
 
 
-    private val salt: String by lazy {
-        ByteArray(16).also { SecureRandom().nextBytes(it) }.toString()
-    }
+    private var salt: String? = null
 
     private lateinit var passwordHash: String
 
@@ -82,14 +76,24 @@ class User private constructor(
     constructor(
         firstName: String,
         lastName: String?,
+        email: String?,
+        rawPhone: String?,
+        salt: String,
+        passwordHash: String
+    ): this(firstName, lastName, email = email, rawPhone = rawPhone){
+        this.salt = salt
+        this.passwordHash = passwordHash
+    }
+
+    constructor(
+        firstName: String,
+        lastName: String?,
         rawPhone: String
     ): this(firstName, lastName, rawPhone = rawPhone, meta = mapOf("auth" to "sms")){
         updateAccessCode().also {
             sendAccessCodeToUser(rawPhone, it)
         }
     }
-
-
 
     private fun generateAccessCode(): String {
         val possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklnopqrstuvwxyz0123456789"
@@ -110,33 +114,55 @@ class User private constructor(
         }
     }
 
-    fun checkPassword(pass: String) = encrypt(pass) == passwordHash
-
-    private fun encrypt(password: String): String = salt.plus(password).md5()
-
-    private fun String.md5(): String {
-        val md = MessageDigest.getInstance("MD5")
-        val digest = md.digest(toByteArray())
-        val hexString = BigInteger(1, digest).toString(16)
-        return hexString.padStart(32, '0')
+    fun checkPassword(pass: String): Boolean {
+        return encrypt(pass) == passwordHash
     }
 
-    private fun sendAccessCodeToUser(phone: String, code: String) {
-        println("..... sending access code: $code on $phone")
-    }
+        private fun encrypt(password: String): String {
+            return if (salt == null)
+                ByteArray(16).also { SecureRandom().nextBytes(it) }.toString().also {
+                    salt = it
+                    it.plus(password).md5()
+                }
+            else
+                salt.plus(password).md5()
+        }
 
-    companion object{
+        private fun String.md5(): String {
+            val md = MessageDigest.getInstance("MD5")
+            val digest = md.digest(toByteArray())
+            val hexString = BigInteger(1, digest).toString(16)
+            return hexString.padStart(32, '0')
+        }
+
+        private fun sendAccessCodeToUser(phone: String, code: String) {
+            println("..... sending access code: $code on $phone")
+        }
+
+        companion object{
 
         fun makeUser(
             fullName: String,
             email: String? = null,
             password: String? = null,
-            phone: String? = null
+            phone: String? = null,
+            salt: String? = null,
+            passwordHash: String? = null
         ): User{
 
             val (firstName, lastName) = fullName.fullNameToPair()
 
             return when {
+                (!email.isNullOrBlank() || !phone.isNullOrBlank()) && !salt.isNullOrBlank() && !passwordHash.isNullOrBlank() -> {
+                    User(
+                        firstName = firstName,
+                        lastName = lastName,
+                        rawPhone = phone,
+                        email = email,
+                        passwordHash = passwordHash,
+                        salt = salt
+                    )
+                }
                 !phone.isNullOrBlank() -> User(firstName, lastName, rawPhone = phone)
                 !email.isNullOrBlank() && !password.isNullOrBlank() -> User(
                     firstName = firstName,
@@ -164,3 +190,4 @@ class User private constructor(
     }
 
 }
+

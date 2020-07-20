@@ -5,6 +5,7 @@ import androidx.annotation.VisibleForTesting
 object UserHolder {
 
     private val map = mutableMapOf<String, User>()
+    private val TAG = UserHolder::class.simpleName
 
     fun registerUser(
         fullName: String,
@@ -52,6 +53,33 @@ object UserHolder {
             it.updateAccessCode()
         }.let {
             map[key] = it ?: return
+        }
+    }
+
+    fun importUsers(list: List<String>): List<User>{
+        val fullNameIndex = 0
+        val emailIndex = 1
+        val saltAndHashIndex = 2
+        val phoneIndex = 3
+        return list.map {
+            val userString = it.split(";").map {stringItem ->
+                stringItem.trim()
+            }
+            var salt: String? = null
+            var hash: String? = null
+            userString.getOrNull(saltAndHashIndex)?.split(":")?.let {saltAndHash ->
+                salt = saltAndHash.getOrNull(0)
+                hash = saltAndHash.getOrNull(1)
+            }
+            User.makeUser(
+                fullName = userString.getOrNull(fullNameIndex) ?: "",
+                phone = userString.getOrNull(phoneIndex),
+                email = userString.getOrNull(emailIndex),
+                salt = salt,
+                passwordHash = hash
+            ).also {user ->
+                map[user.login] = user
+            }
         }
     }
 
