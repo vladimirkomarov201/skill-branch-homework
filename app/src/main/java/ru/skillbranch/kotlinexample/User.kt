@@ -118,28 +118,31 @@ class User private constructor(
         return encrypt(pass) == passwordHash
     }
 
-        private fun encrypt(password: String): String {
-            return if (salt == null)
-                ByteArray(16).also { SecureRandom().nextBytes(it) }.toString().also {
+    private fun encrypt(password: String): String {
+        return if (salt == null)
+            ByteArray(16)
+                .also { SecureRandom().nextBytes(it) }.toString()
+                .also {
                     salt = it
-                    it.plus(password).md5()
+                }.run {
+                    this.plus(password).md5()
                 }
-            else
-                salt.plus(password).md5()
-        }
+        else
+            salt.plus(password).md5()
+    }
 
-        private fun String.md5(): String {
-            val md = MessageDigest.getInstance("MD5")
-            val digest = md.digest(toByteArray())
-            val hexString = BigInteger(1, digest).toString(16)
-            return hexString.padStart(32, '0')
-        }
+    private fun String.md5(): String {
+        val md = MessageDigest.getInstance("MD5")
+        val digest = md.digest(toByteArray())
+        val hexString = BigInteger(1, digest).toString(16)
+        return hexString.padStart(32, '0')
+    }
 
-        private fun sendAccessCodeToUser(phone: String, code: String) {
-            println("..... sending access code: $code on $phone")
-        }
+    private fun sendAccessCodeToUser(phone: String, code: String) {
+        println("..... sending access code: $code on $phone")
+    }
 
-        companion object{
+    companion object{
 
         fun makeUser(
             fullName: String,
