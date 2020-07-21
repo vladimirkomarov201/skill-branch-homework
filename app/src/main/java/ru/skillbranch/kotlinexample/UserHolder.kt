@@ -5,7 +5,6 @@ import androidx.annotation.VisibleForTesting
 object UserHolder {
 
     private val map = mutableMapOf<String, User>()
-    private val TAG = UserHolder::class.simpleName
 
     fun registerUser(
         fullName: String,
