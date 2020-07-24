@@ -61,14 +61,19 @@ class User private constructor(
           phone: $phone
           meta: $meta
         """.trimIndent()
+        updateAccessCode().also {
+            sendAccessCodeToUser(rawPhone ?: return@also, it)
+        }
     }
 
     constructor(
         firstName: String,
         lastName: String?,
         email: String,
-        password: String
-    ): this(firstName, lastName, email = email, meta = mapOf("auth" to "password")){
+        password: String,
+        meta: Map<String, Any>?,
+        workaround: Int = 0
+    ): this(firstName, lastName, email = email, meta = meta ?: mapOf("auth" to "password")){
         println("Secondary email constructor")
         passwordHash = encrypt(password)
     }
@@ -79,20 +84,11 @@ class User private constructor(
         email: String?,
         rawPhone: String?,
         salt: String,
-        passwordHash: String
-    ): this(firstName, lastName, email = email, rawPhone = rawPhone, meta = mapOf("src" to "csv")){
+        passwordHash: String,
+        meta: Map<String, Any>?
+    ): this(firstName, lastName, email = email, rawPhone = rawPhone, meta = meta){
         this.salt = salt
         this.passwordHash = passwordHash
-    }
-
-    constructor(
-        firstName: String,
-        lastName: String?,
-        rawPhone: String
-    ): this(firstName, lastName, rawPhone = rawPhone, meta = mapOf("auth" to "sms")){
-        updateAccessCode().also {
-            sendAccessCodeToUser(rawPhone, it)
-        }
     }
 
     private fun generateAccessCode(): String {
@@ -150,7 +146,8 @@ class User private constructor(
             password: String? = null,
             phone: String? = null,
             salt: String? = null,
-            passwordHash: String? = null
+            passwordHash: String? = null,
+            meta: Map<String, Any>? = null
         ): User{
 
             val (firstName, lastName) = fullName.fullNameToPair()
@@ -163,15 +160,17 @@ class User private constructor(
                         rawPhone = phone,
                         email = email,
                         passwordHash = passwordHash,
-                        salt = salt
+                        salt = salt,
+                        meta = meta
                     )
                 }
-                !phone.isNullOrBlank() -> User(firstName, lastName, rawPhone = phone)
+                !phone.isNullOrBlank() -> User(firstName, lastName, rawPhone = phone, meta = meta ?: mapOf("auth" to "sms"))
                 !email.isNullOrBlank() && !password.isNullOrBlank() -> User(
                     firstName = firstName,
                     lastName = lastName,
                     email = email,
-                    password = password
+                    password = password,
+                    meta = meta
                 )
                 else -> throw IllegalArgumentException("Email or phone must not be null or blank")
             }

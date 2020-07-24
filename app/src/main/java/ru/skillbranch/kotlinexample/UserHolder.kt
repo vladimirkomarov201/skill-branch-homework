@@ -77,7 +77,8 @@ object UserHolder {
                 },
                 email = userString.getOrNull(emailIndex),
                 salt = salt,
-                passwordHash = hash
+                passwordHash = hash,
+                meta = mapOf("src" to "csv")
             ).also {user ->
                 map[user.login] = user
             }
