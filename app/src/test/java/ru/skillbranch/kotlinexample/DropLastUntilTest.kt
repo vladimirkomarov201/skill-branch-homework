@@ -14,14 +14,8 @@ class DropLastUntilTest {
 
     @Test
     fun drop_half_list(){
-        val list = listOf(1, 2, 3, 4, 5, 6)
-        Assert.assertTrue(list.dropLastUntil { it == 3}.size == 3)
-    }
-
-    @Test
-    fun drop_nothing(){
-        val list = listOf(1, 2, 3, 4, 5, 6)
-        Assert.assertTrue(list.dropLastUntil { it == 6}.size == list.size)
+        val list = listOf(1, 2, 3, 4, 5, 6, 7, 8)
+        Assert.assertTrue(list.dropLastUntil { it == 5}.size == 4)
     }
 
 }
