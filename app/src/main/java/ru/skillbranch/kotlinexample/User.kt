@@ -156,7 +156,7 @@ class User private constructor(
             val (firstName, lastName) = fullName.fullNameToPair()
 
             return when {
-                (!email.isNullOrBlank() || !phone.isNullOrBlank()) && !salt.isNullOrBlank() && !passwordHash.isNullOrBlank() -> {
+                !email.isNullOrBlank() && !salt.isNullOrBlank() && !passwordHash.isNullOrBlank() -> {
                     User(
                         firstName = firstName,
                         lastName = lastName,

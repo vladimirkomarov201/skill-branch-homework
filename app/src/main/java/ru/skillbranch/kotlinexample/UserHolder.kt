@@ -72,7 +72,9 @@ object UserHolder {
             }
             User.makeUser(
                 fullName = userString.getOrNull(fullNameIndex) ?: "",
-                phone = userString.getOrNull(phoneIndex),
+                phone = userString.getOrNull(phoneIndex).run {
+                    if (this.isNullOrEmpty()) null else this
+                },
                 email = userString.getOrNull(emailIndex),
                 salt = salt,
                 passwordHash = hash
