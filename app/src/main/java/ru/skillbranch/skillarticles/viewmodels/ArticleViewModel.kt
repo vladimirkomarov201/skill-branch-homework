@@ -7,6 +7,7 @@ import ru.skillbranch.skillarticles.data.repositories.ArticleRepository
 import ru.skillbranch.skillarticles.extensions.data.toAppSettings
 import ru.skillbranch.skillarticles.extensions.data.toArticlePersonalInfo
 import ru.skillbranch.skillarticles.extensions.format
+import ru.skillbranch.skillarticles.viewmodels.base.Notify
 
 class ArticleViewModel(private val articleId: String): BaseViewModel<ArticleState>(
     ArticleState()
@@ -92,7 +93,7 @@ class ArticleViewModel(private val articleId: String): BaseViewModel<ArticleStat
         val msg = if (!isLiked) Notify.TextMessage("Mark is liked")
         else {
             Notify.ActionMessage(
-                msg = "Don't like it anymore",
+                msg = "Don`t like it anymore",
                 actionLabel = "No, still like it",
                 actionHandler = toggleLike
             )
@@ -106,7 +107,7 @@ class ArticleViewModel(private val articleId: String): BaseViewModel<ArticleStat
     }
 
     override fun handleToggleMenu() {
-        TODO("Not yet implemented")
+        updateState { it.copy(isShowMenu = !it.isShowMenu) }
     }
 
     override fun handleSearchMode(isSearch: Boolean) {
