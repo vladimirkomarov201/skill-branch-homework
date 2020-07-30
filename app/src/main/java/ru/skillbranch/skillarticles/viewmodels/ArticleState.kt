@@ -1,4 +1,4 @@
-package ru.skillbranch.skillarticles.data
+package ru.skillbranch.skillarticles.viewmodels
 
 data class ArticleState(
     val isAuth: Boolean = false, //пользователь авторизован

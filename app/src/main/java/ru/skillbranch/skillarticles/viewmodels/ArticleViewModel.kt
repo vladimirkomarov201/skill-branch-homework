@@ -3,11 +3,14 @@ package ru.skillbranch.skillarticles.viewmodels
 import androidx.lifecycle.LiveData
 import ru.skillbranch.skillarticles.data.ArticleData
 import ru.skillbranch.skillarticles.data.ArticlePersonalInfo
-import ru.skillbranch.skillarticles.data.ArticleState
 import ru.skillbranch.skillarticles.data.repositories.ArticleRepository
+import ru.skillbranch.skillarticles.extensions.data.toAppSettings
+import ru.skillbranch.skillarticles.extensions.data.toArticlePersonalInfo
 import ru.skillbranch.skillarticles.extensions.format
 
-class ArticleViewModel(private val articleId: String): BaseViewModel<ArticleState>(ArticleState()), IArticleViewModel {
+class ArticleViewModel(private val articleId: String): BaseViewModel<ArticleState>(
+    ArticleState()
+), IArticleViewModel {
 
     private val repository = ArticleRepository
 
@@ -60,27 +63,46 @@ class ArticleViewModel(private val articleId: String): BaseViewModel<ArticleStat
 
 
     override fun handleNightMode() {
-       // val settings = currentState.to
+        val settings = currentState.toAppSettings()
+        repository.updateSettings(settings.copy(isDarkMode = !settings.isDarkMode))
     }
 
     override fun handleUpText() {
-        TODO("Not yet implemented")
+        repository.updateSettings(currentState.toAppSettings().copy(isBigText = true))
     }
 
     override fun handleDownText() {
-        TODO("Not yet implemented")
+        repository.updateSettings(currentState.toAppSettings().copy(isBigText = false))
     }
 
     override fun handleBookmark() {
-        TODO("Not yet implemented")
+        val info = currentState.toArticlePersonalInfo()
+        repository.updateArticlePersonalInfo(info.copy(isBookmark = !info.isBookmark))
+        val msg = if (currentState.isBookmark) "Add to bookmarks" else "Remove from bookmarks"
+        notify(Notify.TextMessage(msg))
     }
 
     override fun handleLike() {
-        TODO("Not yet implemented")
+        val isLiked = currentState.isLike
+        val toggleLike = {
+            val info = currentState.toArticlePersonalInfo()
+            repository.updateArticlePersonalInfo(info.copy(isLike = !info.isLike))
+        }
+        toggleLike()
+        val msg = if (!isLiked) Notify.TextMessage("Mark is liked")
+        else {
+            Notify.ActionMessage(
+                msg = "Don't like it anymore",
+                actionLabel = "No, still like it",
+                actionHandler = toggleLike
+            )
+        }
+        notify(msg)
     }
 
     override fun handleShare() {
-        TODO("Not yet implemented")
+        val msg = "Share is not implemented"
+        notify(Notify.ErrorMessage(msg, "OK", null))
     }
 
     override fun handleToggleMenu() {
@@ -88,11 +110,11 @@ class ArticleViewModel(private val articleId: String): BaseViewModel<ArticleStat
     }
 
     override fun handleSearchMode(isSearch: Boolean) {
-        TODO("Not yet implemented")
+        updateState { it.copy(isSearch = isSearch) }
     }
 
     override fun handleSearch(query: String?) {
-        TODO("Not yet implemented")
+        updateState { it.copy(searchQuery = query) }
     }
 
 }
