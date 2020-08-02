@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import ru.skillbranch.skillarticles.data.ArticleData
 import ru.skillbranch.skillarticles.data.ArticlePersonalInfo
 import ru.skillbranch.skillarticles.data.repositories.ArticleRepository
-import ru.skillbranch.skillarticles.extensions.data.ArticleState
 import ru.skillbranch.skillarticles.extensions.data.toAppSettings
 import ru.skillbranch.skillarticles.extensions.data.toArticlePersonalInfo
 import ru.skillbranch.skillarticles.extensions.format
@@ -119,3 +118,27 @@ class ArticleViewModel(private val articleId: String): BaseViewModel<ArticleStat
     }
 
 }
+
+data class ArticleState(
+    val isAuth: Boolean = false, //пользователь авторизован
+    val isLoadingContent: Boolean = true, //content загружается
+    val isLoadingReviews: Boolean = true, //отзывы загружаются
+    val isLike: Boolean = false, //лайкнуто
+    val isBookmark: Boolean = false, //в закладках
+    val isShowMenu: Boolean = false,
+    val isBigText: Boolean = false,
+    val isDarkMode: Boolean = false,
+    val isSearch: Boolean = false, //режим поиска
+    val searchQuery: String? = null, //поисковый запрос
+    val searchResults: List<Pair<Int, Int>> = emptyList(), //результат поиска
+    val searchPosition: Int = 0, //текущая позиция найденного результата
+    val shareLink: String? = null, //ссылка Share
+    val title: String? = null,
+    val category: String? = null,
+    val categoryIcon: Any? = null,
+    val date: String? = null,
+    val author: Any? = null,
+    val poster: String? = null,
+    val content: List<Any> = emptyList(),
+    val reviews: List<Any> = emptyList()
+)
