@@ -18,4 +18,5 @@ class Bottombar @JvmOverloads constructor(
         materialBg.elevation = elevation
         background = materialBg
     }
+
 }
