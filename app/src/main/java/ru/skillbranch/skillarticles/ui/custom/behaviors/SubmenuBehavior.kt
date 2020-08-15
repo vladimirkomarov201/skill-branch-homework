@@ -1,4 +1,4 @@
-package ru.skillbranch.skillarticles.ui.custom.behaviours
+package ru.skillbranch.skillarticles.ui.custom.behaviors
 
 import android.content.Context
 import android.util.AttributeSet
@@ -8,7 +8,7 @@ import androidx.core.view.marginRight
 import ru.skillbranch.skillarticles.ui.custom.ArticleSubmenu
 import ru.skillbranch.skillarticles.ui.custom.Bottombar
 
-class SubMenuBehaviour(): CoordinatorLayout.Behavior<ArticleSubmenu>() {
+class SubmenuBehavior(): CoordinatorLayout.Behavior<ArticleSubmenu>() {
 
     constructor(context: Context, attributeSet: AttributeSet):this()
 

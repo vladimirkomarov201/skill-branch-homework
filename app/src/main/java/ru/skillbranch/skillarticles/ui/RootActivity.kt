@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.layout_bottombar.view.*
 import kotlinx.android.synthetic.main.layout_submenu.*
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
-import ru.skillbranch.skillarticles.extensions.getChildOrNull
 import ru.skillbranch.skillarticles.viewmodels.ArticleViewModel
 import ru.skillbranch.skillarticles.viewmodels.ViewModelFactory
 
@@ -107,7 +106,7 @@ class RootActivity : AppCompatActivity() {
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        val logo = toolbar.getChildOrNull(2) as? ImageView
+        val logo = if (toolbar.childCount < 2) null else toolbar.getChildAt(2) as? ImageView
         logo?.scaleType = ImageView.ScaleType.CENTER_CROP
         val lp = logo?.layoutParams as? Toolbar.LayoutParams
         lp?.let {
