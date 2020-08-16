@@ -1,5 +1,7 @@
 package ru.skillbranch.skillarticles.viewmodels
 
+import android.os.Bundle
+import androidx.core.os.bundleOf
 import androidx.lifecycle.LiveData
 import ru.skillbranch.skillarticles.data.ArticleData
 import ru.skillbranch.skillarticles.data.ArticlePersonalInfo
@@ -7,6 +9,9 @@ import ru.skillbranch.skillarticles.data.repositories.ArticleRepository
 import ru.skillbranch.skillarticles.extensions.data.toAppSettings
 import ru.skillbranch.skillarticles.extensions.data.toArticlePersonalInfo
 import ru.skillbranch.skillarticles.extensions.format
+import ru.skillbranch.skillarticles.viewmodels.base.BaseViewModel
+import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
+import ru.skillbranch.skillarticles.viewmodels.base.Notify
 
 class ArticleViewModel(private val articleId: String): BaseViewModel<ArticleState>(
     ArticleState()
@@ -141,4 +146,24 @@ data class ArticleState(
     val poster: String? = null,
     val content: List<Any> = emptyList(),
     val reviews: List<Any> = emptyList()
-)
+): IViewModelState {
+    override fun save(outState: Bundle) {
+        outState.putAll(
+            bundleOf(
+                "isSearch" to isSearch,
+                "searchQuery" to searchQuery,
+                "searchResults" to searchResults,
+                "searchPosition" to searchPosition
+            )
+        )
+    }
+
+    override fun restore(savedState: Bundle): IViewModelState {
+        return copy(
+            isSearch = savedState["isSearch"] as Boolean,
+            searchQuery = savedState["searchQuery"] as? String,
+            searchResults = savedState["searchResults"] as List<Pair<Int, Int>>,
+            searchPosition = savedState["searchPosition"] as Int
+        )
+    }
+}
