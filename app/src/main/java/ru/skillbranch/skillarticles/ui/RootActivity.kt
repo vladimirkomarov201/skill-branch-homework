@@ -128,7 +128,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
 
     override fun clearSearchResult() {
         val content = tv_text_content.text as Spannable
-        content.getSpans<SearchFocusSpan>().forEach { content.removeSpan(it) }
+        content.getSpans<SearchSpan>().forEach { content.removeSpan(it) }
     }
 
     override fun showSearchBar() {
