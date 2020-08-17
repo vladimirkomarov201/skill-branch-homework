@@ -1,5 +1,7 @@
 package ru.skillbranch.skillarticles.ui.custom.behaviors
 
+import android.content.Context
+import android.util.AttributeSet
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.math.MathUtils
@@ -8,6 +10,8 @@ import ru.skillbranch.skillarticles.ui.custom.Bottombar
 
 
 class BottombarBehavior() : CoordinatorLayout.Behavior<Bottombar>() {
+
+    constructor(context: Context, attributeSet: AttributeSet): this()
 
     override fun onStartNestedScroll(
         coordinatorLayout: CoordinatorLayout,
