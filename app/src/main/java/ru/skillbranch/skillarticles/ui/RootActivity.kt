@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.core.text.getSpans
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_bottombar.*
@@ -38,7 +37,6 @@ import ru.skillbranch.skillarticles.viewmodels.ArticleState
 import ru.skillbranch.skillarticles.viewmodels.ArticleViewModel
 import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
 import ru.skillbranch.skillarticles.viewmodels.base.Notify
-import ru.skillbranch.skillarticles.viewmodels.base.ViewModelFactory
 
 
 class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
@@ -50,10 +48,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
         ArticleBinding()
     }
 
-    override val viewModel: ArticleViewModel by lazy {
-        val factory = ViewModelFactory("0")
-        ViewModelProvider(this, factory).get(ArticleViewModel::class.java)
-    }
+    override val viewModel: ArticleViewModel by provideViewModel<ArticleViewModel>("")
 
     private var isSearch = false
     private var searchQuery: String? = null
