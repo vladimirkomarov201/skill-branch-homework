@@ -18,7 +18,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.text.getSpans
 import androidx.core.view.isVisible
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_root.*
 import kotlinx.android.synthetic.main.layout_bottombar.*
 import kotlinx.android.synthetic.main.layout_bottombar.view.*
 import kotlinx.android.synthetic.main.layout_submenu.*
@@ -41,7 +41,7 @@ import ru.skillbranch.skillarticles.viewmodels.base.Notify
 
 class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
 
-    override val layout: Int = R.layout.activity_main
+    override val layout: Int = R.layout.activity_root
 
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     public override val binding: Binding by lazy {
