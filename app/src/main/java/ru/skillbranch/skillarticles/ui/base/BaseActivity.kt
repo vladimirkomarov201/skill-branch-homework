@@ -2,6 +2,7 @@ package ru.skillbranch.skillarticles.ui.base
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModel
 import ru.skillbranch.skillarticles.viewmodels.base.BaseViewModel
 import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
 import ru.skillbranch.skillarticles.viewmodels.base.Notify
@@ -16,11 +17,11 @@ abstract class BaseActivity<T : BaseViewModel<out IViewModelState>> : AppCompatA
     abstract fun setupViews()
     abstract fun renderNotification(notify: Notify)
 
-    internal inline fun <reified E: T>provideViewModel(arg : Any?) : ViewModelDelegate<T>{
+    internal inline fun <reified T: ViewModel>provideViewModel(arg : Any?) : ViewModelDelegate<T>{
         return ViewModelDelegate(
-            E::class.java,
+            T::class.java,
             arg
-        ) as ViewModelDelegate<T>
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
