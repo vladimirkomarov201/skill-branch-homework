@@ -292,7 +292,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
             if (data.title != null) title = data.title
             if (data.category != null) category = data.category
             if (data.categoryIcon != null) categoryIcon = data.categoryIcon as Int
-            if (data.content.isNotEmpty()) content = data.content.first() as String
+            if (!data.content.isNullOrEmpty()) content = data.content
 
             isLoadingContent = data.isLoadingContent
             isSearch = data.isSearch
