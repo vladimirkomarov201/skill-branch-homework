@@ -104,7 +104,7 @@ class HeaderSpan constructor(
         sizes[level]?.let {
             paint.textSize *= it
         }
-        canvas.drawFontLines(lineTop, lineBottom, lineBaseline, paint)
+        //canvas.drawFontLines(lineTop, lineBottom, lineBaseline, paint)
         paint.textSize = oldSize
     }
 
