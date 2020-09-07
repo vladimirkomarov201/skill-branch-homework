@@ -10,12 +10,12 @@ object MarkdownParser {
     private const val UNORDERED_LIST_ITEM_GROUP = "(^[*+-] .+$)"
     private const val HEADER_GROUP = "(^#{1,6} .+?$)"
     private const val QUOTE_GROUP = "(^> .+?$)"
-    private const val ITALIC_GROUP = "((?<!\\*)\\*(^*].*?[^*]?\\*(?!\\*)|(?<!_)_[^_].*?[^_]?_{?!_))"
+    private const val ITALIC_GROUP = "((?<!\\*)\\*[^*].*?[^*]?\\*(?!\\*)|(?<!_)_[^_].*?[^_]?_(?!_))"
     private const val BOLD_GROUP = "((?<!\\*)\\*{2}[^*].*?[^*]?\\*{2}(?!\\*)|(?<!_)_{2}[^_].*?[^_]?_{2}(?!_))"
     private const val STRIKE_GROUP = "" //TODO implement me
-    private const val RULE_GROUP = "(^[-_*}{3}$)"
+    private const val RULE_GROUP = "(^[-_*]{3}$)"
     private const val INLINE_GROUP = "((?<!`)`[^`l\\s].*?[^`\\s]?`(?!`))"
-    private const val LINK_GROUP = "(\\[[^\\[\\]]*?]\\(.+?\\)]^\\[*?]\\(.*?\\))"
+    private const val LINK_GROUP = "(\\[[^\\[\\]]*?]\\(.+?\\)|^\\[*?]\\(.*?\\))"
     private const val BLOCK_CODE_GROUP = "" //TODO implement me
     private const val ORDER_LIST_GROUP = "" //TODO implement me
 
