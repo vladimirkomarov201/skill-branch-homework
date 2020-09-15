@@ -12,7 +12,7 @@ object MarkdownParser {
     private const val QUOTE_GROUP = "(^> .+?$)"
     private const val ITALIC_GROUP = "((?<!\\*)\\*[^*].*?[^*]?\\*(?!\\*)|(?<!_)_[^_].*?[^_]?_(?!_))"
     private const val BOLD_GROUP = "((?<!\\*)\\*{2}[^*].*?[^*]?\\*{2}(?!\\*)|(?<!_)_{2}[^_].*?[^_]?_{2}(?!_))"
-    private const val STRIKE_GROUP = "" //TODO implement me
+    private const val STRIKE_GROUP = "(~{2}.+~{2})" //TODO implement me
     private const val RULE_GROUP = "(^[-_*]{3}$)"
     private const val INLINE_GROUP = "((?<!`)`[^`l\\s].*?[^`\\s]?`(?!`))"
     private const val LINK_GROUP = "(\\[[^\\[\\]]*?]\\(.+?\\)|^\\[*?]\\(.*?\\))"
@@ -40,7 +40,16 @@ object MarkdownParser {
      */
     fun clear(string: String?): String? {
         return string?.run {
-            val regex = "\\*+ ?|#+ ?|~{2}[^~].|-{3}".toRegex()
+            val inline = "((?<!`)`(?=[\\[(].*?)|(?<=[])])`(?!`))"
+            val inlineSimpleText = "(?<!`)`(?=\\w[^\n]+`)|(?<=`[^\n]{1,50}\\w)`(?!`)"
+            val linkText = "(?<!`)\\[(?=[^\\[\\]]*?)|(?<=[^\\[\\]])](?!`)"
+            val http = "\\(http.+\\)"
+            val link = "$linkText|$http"
+            val minus = "(?<=\n)-+(?=\n)|(?<=\n)- ?"
+            val stars = "(?<=\n)\\*{1,50} ?|\\*+"
+            val plus = "(?<=\n)\\+ "
+            val underline = "_+(?=\\S)|(?<=\\S)_+"
+            val regex = "$stars|#+ ?|~{2}|$minus|$underline|> |$plus|$inline|$inlineSimpleText|$link".toRegex()
             regex.replace(this, "")
         }
     }
