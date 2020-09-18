@@ -40,6 +40,9 @@ object MarkdownParser {
      */
     fun clear(string: String?): String? {
         return string?.run {
+            val regex = "-{3}|\\*{3}|_{3}".toRegex()
+            regex.replace(this, " ")
+        }?.run {
             val inline = "((?<!`)`(?=[\\[(].*?)|(?<=[])])`(?!`))"
             val inlineSimpleText = "(?<!`)`(?=\\w[^\n]+`)|(?<=`[^\n]{1,50}\\w)`(?!`)"
             val linkText = "(?<!`)\\[(?=[^\\[\\]]*?)|(?<=[^\\[\\]])](?!`)"
