@@ -35,10 +35,10 @@ class BlockCodeSpan(
         bottom: Int,
         paint: Paint
     ) = when(type){
-        Element.BlockCode.Type.END -> forEnd(top, canvas, bottom, paint)
-        Element.BlockCode.Type.MIDDLE -> forMiddle(top, canvas, bottom, paint)
+        Element.BlockCode.Type.END -> forEnd(top, canvas, bottom, paint, text, start, end, x, y)
+        Element.BlockCode.Type.MIDDLE -> forMiddle(top, canvas, bottom, paint, text, start, end, x, y)
         Element.BlockCode.Type.SINGLE -> forSingle(top, canvas, bottom, paint, text, x, y)
-        Element.BlockCode.Type.START -> forStart(top, canvas, bottom, paint)
+        Element.BlockCode.Type.START -> forStart(top, canvas, bottom, paint, text, start, end, x, y)
     }
 
     override fun getSize(
@@ -48,23 +48,41 @@ class BlockCodeSpan(
         end: Int,
         fm: Paint.FontMetricsInt?
     ): Int {
-//        text as Spannable
-//        val start = text.getSpanStart(this)
-//        val end = text.getSpanEnd(this)
-//        if (start == -1 ||end ==  -1) return 0
-//        return end - start
+        fm?.let {
+            when(type){
+                Element.BlockCode.Type.START -> {
+                    it.ascent = (paint.ascent() - 2 * padding).toInt()
+                    it.descent = paint.descent().toInt()
+                }
+                Element.BlockCode.Type.END -> {
+                    it.ascent = paint.ascent().toInt()
+                    it.descent = (paint.descent() + 2 * padding).toInt()
+                }
+                Element.BlockCode.Type.MIDDLE -> {
+                    it.descent = paint.descent().toInt()
+                    it.ascent = paint.ascent().toInt()
+                }
+                Element.BlockCode.Type.SINGLE -> {
+                    it.ascent = (paint.ascent() - 2 * padding).toInt()
+                    it.descent = (paint.descent() + 2 * padding).toInt()
+                }
+            }
+            it.top = it.ascent
+            it.bottom = it.descent
+        }
         return 0
     }
 
     private fun forSingle(top: Int, canvas: Canvas, bottom: Int, paint: Paint, text: CharSequence, x: Float, y: Int){
         paint.forBackground {
+            rect.set(
+                0f,
+                top + padding,
+                canvas.width.toFloat(),
+                bottom - padding
+            )
             canvas.drawRoundRect(
-                RectF(
-                    0f,
-                    top + padding,
-                    canvas.width.toFloat(),
-                    bottom - padding
-                ),
+                rect,
                 cornerRadius,
                 cornerRadius,
                 paint
@@ -75,59 +93,74 @@ class BlockCodeSpan(
         }
     }
 
-    private fun forStart(top: Int, canvas: Canvas, bottom: Int, paint: Paint){
-        path.reset()
-        path.addRoundRect(
-            RectF(
+    private fun forStart(top: Int, canvas: Canvas, bottom: Int, paint: Paint, text: CharSequence, start: Int, end: Int, x: Float, y: Int){
+        paint.forBackground {
+            rect.set(
                 0f,
                 top + padding,
                 canvas.width.toFloat(),
                 bottom.toFloat()
-            ),
-            floatArrayOf(
-                cornerRadius, cornerRadius, // Top left radius in px
-                cornerRadius, cornerRadius, // Top right radius in px
-                0f, 0f, // Bottom right radius in px
-                0f, 0f // Bottom left radius in px
-            ),
-            Path.Direction.CW
-        )
-        canvas.drawPath(path, paint)
-    }
-
-    private fun forMiddle(top: Int, canvas: Canvas, bottom: Int, paint: Paint){
-        paint.forBackground {
-            canvas.drawRect(
-                RectF(
-                    0f,
-                    top.toFloat(),
-                    canvas.width.toFloat(),
-                    bottom.toFloat()
-                ),
-                paint
             )
-        }
-    }
-
-    private fun forEnd(top: Int, canvas: Canvas, bottom: Int, paint: Paint){
-        paint.forBackground {
             path.reset()
             path.addRoundRect(
-                RectF(
-                    0f,
-                    top.toFloat(),
-                    canvas.width.toFloat(),
-                    bottom - padding
-                ),
+                rect,
                 floatArrayOf(
-                    0f, 0f,
-                    0f, 0f,
-                    cornerRadius, cornerRadius,
-                    cornerRadius, cornerRadius
+                    cornerRadius, cornerRadius, // Top left radius in px
+                    cornerRadius, cornerRadius, // Top right radius in px
+                    0f, 0f, // Bottom right radius in px
+                    0f, 0f // Bottom left radius in px
                 ),
                 Path.Direction.CW
             )
             canvas.drawPath(path, paint)
+        }
+        paint.forText {
+            canvas.drawText(text, start, end, x + padding, y.toFloat(), paint)
+        }
+    }
+
+    private fun forMiddle(top: Int, canvas: Canvas, bottom: Int, paint: Paint, text: CharSequence, start: Int, end: Int, x: Float, y: Int){
+        paint.forBackground {
+            rect.set(
+                0f,
+                top.toFloat(),
+                canvas.width.toFloat(),
+                bottom.toFloat()
+            )
+            canvas.drawRect(
+                rect,
+                paint
+            )
+        }
+        paint.forText {
+            canvas.drawText(text, start, end, x + padding, y.toFloat(), paint)
+        }
+    }
+
+    private fun forEnd(top: Int, canvas: Canvas, bottom: Int, paint: Paint, text: CharSequence, start: Int, end: Int, x: Float, y: Int){
+        paint.forBackground {
+            val corners = floatArrayOf(
+                0f, 0f,
+                0f, 0f,
+                cornerRadius, cornerRadius,
+                cornerRadius, cornerRadius
+            )
+            rect.set(
+                0f,
+                top.toFloat(),
+                canvas.width.toFloat(),
+                bottom - padding
+            )
+            path.reset()
+            path.addRoundRect(
+                rect,
+                corners,
+                Path.Direction.CW
+            )
+            canvas.drawPath(path, paint)
+        }
+        paint.forText {
+            canvas.drawText(text, start, end, x + padding, y.toFloat(), paint)
         }
     }
 
