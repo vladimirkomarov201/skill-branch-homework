@@ -1,22 +1,23 @@
 package ru.skillbranch.skillarticles.ui
 
 import android.app.SearchManager
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
 import android.text.Selection
 import android.text.Spannable
 import android.text.SpannableString
-import android.text.method.LinkMovementMethod
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toolbar
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.core.text.getSpans
 import androidx.core.view.isVisible
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_root.*
 import kotlinx.android.synthetic.main.layout_bottombar.*
@@ -24,6 +25,7 @@ import kotlinx.android.synthetic.main.layout_bottombar.view.*
 import kotlinx.android.synthetic.main.layout_submenu.*
 import kotlinx.android.synthetic.main.search_view_layout.*
 import ru.skillbranch.skillarticles.R
+import ru.skillbranch.skillarticles.data.repositories.MarkdownElement
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
 import ru.skillbranch.skillarticles.extensions.setMarginOptionally
 import ru.skillbranch.skillarticles.ui.base.BaseActivity
@@ -205,12 +207,31 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
         bottombar.btn_settings.setOnClickListener {
             viewModel.handleToggleMenu()
         }
+        btn_result_up.setOnClickListener {
+            if (tv_text_content.hasFocus()) tv_text_content.requestFocus()
+            hideKeyboard(btn_result_up)
+            viewModel.handleUpResult()
+        }
+        btn_result_down.setOnClickListener {
+            if (tv_text_content.hasFocus()) tv_text_content.requestFocus()
+            hideKeyboard(btn_result_down)
+            viewModel.handleDownResult()
+        }
     }
 
     private fun setupMenu(){
         switch_mode.setOnClickListener {
             delegate.localNightMode = if (switch_mode.isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
 
+        }
+    }
+
+    private fun setupCopyListener(){
+        tv_text_content.setCopyListener {
+            val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText("Copied code", it)
+            clipboard.setPrimaryClip(clip)
+            viewModel.handleCopyCode()
         }
     }
 
@@ -250,16 +271,29 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
         }
 
         var isSearch: Boolean by ObserveProp(false) {
-            if (it) showSearchBar() else hideSearchBar()
+            if (it) {
+                showSearchBar()
+                with(toolbar) {
+                    (layoutParams as AppBarLayout.LayoutParams).scrollFlags =
+                        AppBarLayout.LayoutParams.SCROLL_FLAG_NO_SCROLL
+                }
+            } else {
+                hideSearchBar()
+                with(toolbar) {
+                    (layoutParams as AppBarLayout.LayoutParams).scrollFlags =
+                        AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS_COLLAPSED
+                }
+            }
         }
 
         private var searchResults: List<Pair<Int, Int>> by ObserveProp(emptyList())
 
         private var searchPosition: Int by ObserveProp(0)
 
-        private var content: String by ObserveProp("loading") {
-            tv_text_content.setText(it, TextView.BufferType.SPANNABLE)
-            tv_text_content.movementMethod = LinkMovementMethod()
+        private var content: List<MarkdownElement> by ObserveProp(emptyList()) {
+            tv_text_content.isLoading = it.isEmpty()
+            tv_text_content.setContent(it)
+            if (it.isNotEmpty()) setupCopyListener()
         }
 
         override fun onFinishInflate() {
