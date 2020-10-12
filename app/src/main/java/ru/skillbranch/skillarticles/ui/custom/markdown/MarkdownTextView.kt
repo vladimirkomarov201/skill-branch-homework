@@ -8,6 +8,7 @@ import android.text.Spannable
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.widget.TextView
+import androidx.annotation.VisibleForTesting
 import androidx.core.graphics.withTranslation
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.extensions.attrValue

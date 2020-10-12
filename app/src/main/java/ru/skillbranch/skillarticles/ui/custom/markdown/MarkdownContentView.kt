@@ -17,7 +17,9 @@ class MarkdownContentView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr) {
-    private lateinit var elements: List<MarkdownElement>
+
+    lateinit var elements: List<MarkdownElement>
+        private set
 
     //for restore
     private var ids = arrayListOf<Int>()
@@ -45,7 +47,7 @@ class MarkdownContentView @JvmOverloads constructor(
 
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        var usedHeight = padding
+        var usedHeight = paddingTop
         val bodyWidth = right - left - paddingLeft - paddingRight
         val left = paddingLeft
         val right = paddingLeft + bodyWidth

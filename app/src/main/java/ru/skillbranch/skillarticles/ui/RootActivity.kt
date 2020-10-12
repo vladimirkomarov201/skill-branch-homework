@@ -5,9 +5,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
-import android.text.Selection
-import android.text.Spannable
-import android.text.SpannableString
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
@@ -15,8 +12,6 @@ import android.widget.Toolbar
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
-import androidx.core.text.getSpans
-import androidx.core.view.isVisible
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_root.*
@@ -30,8 +25,6 @@ import ru.skillbranch.skillarticles.extensions.dpToIntPx
 import ru.skillbranch.skillarticles.extensions.setMarginOptionally
 import ru.skillbranch.skillarticles.ui.base.BaseActivity
 import ru.skillbranch.skillarticles.ui.base.Binding
-import ru.skillbranch.skillarticles.ui.custom.SearchFocusSpan
-import ru.skillbranch.skillarticles.ui.custom.SearchSpan
 import ru.skillbranch.skillarticles.ui.delegates.AttrValue
 import ru.skillbranch.skillarticles.ui.delegates.ObserveProp
 import ru.skillbranch.skillarticles.ui.delegates.RenderProp
@@ -93,39 +86,15 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
     }
 
     override fun renderSearchResult(searchResult: List<Pair<Int, Int>>) {
-        val content = tv_text_content.text as Spannable
-        tv_text_content.isVisible
-        clearSearchResult()
-        searchResult.forEach { (start, end) ->
-            content.setSpan(
-                SearchSpan(bgColor, fgColor),
-                start,
-                end,
-                SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-        }
-        renderSearchPosition(0)
+        tv_text_content.renderSearchResult(searchResult)
     }
 
-    override fun renderSearchPosition(searchPosition: Int) {
-        val content = tv_text_content.text as Spannable
-        val spans = content.getSpans<SearchSpan>()
-        content.getSpans<SearchFocusSpan>().forEach { content.removeSpan(it) }
-        if (spans.isNotEmpty()) {
-            val result = spans[searchPosition]
-            Selection.setSelection(content, content.getSpanStart(result))
-            content.setSpan(
-                SearchFocusSpan(bgColor, fgColor),
-                content.getSpanStart(result),
-                content.getSpanEnd(result),
-                SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-        }
+    override fun renderSearchPosition(searchPosition: Pair<Int, Int>?) {
+        tv_text_content.renderSearchPosition(searchPosition)
     }
 
     override fun clearSearchResult() {
-        val content = tv_text_content.text as Spannable
-        content.getSpans<SearchSpan>().forEach { content.removeSpan(it) }
+        tv_text_content.clearSearchResult()
     }
 
     override fun showSearchBar() {
@@ -209,13 +178,13 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
         }
         btn_result_up.setOnClickListener {
             if (tv_text_content.hasFocus()) tv_text_content.requestFocus()
-            hideKeyboard(btn_result_up)
-            viewModel.handleUpResult()
+//            hideKeyboard(btn_result_up)
+//            viewModel.handleUpResult()
         }
         btn_result_down.setOnClickListener {
             if (tv_text_content.hasFocus()) tv_text_content.requestFocus()
-            hideKeyboard(btn_result_down)
-            viewModel.handleDownResult()
+//            hideKeyboard(btn_result_down)
+//            viewModel.handleDownResult()
         }
     }
 
@@ -231,7 +200,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
             val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("Copied code", it)
             clipboard.setPrimaryClip(clip)
-            viewModel.handleCopyCode()
+//            viewModel.handleCopyCode()
         }
     }
 
@@ -305,7 +274,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
             ) { ilc: Boolean, iss: Boolean, sr: List<Pair<Int, Int>>, sp: Int ->
                 if (!ilc && iss){
                     renderSearchResult(sr)
-                    renderSearchPosition(sp)
+                    renderSearchPosition(sr.getOrNull(sp))
                 }
                 if (!ilc && !iss){
                     clearSearchResult()

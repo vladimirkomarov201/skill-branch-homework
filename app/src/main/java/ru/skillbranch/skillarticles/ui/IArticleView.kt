@@ -9,7 +9,7 @@ interface IArticleView {
     /**
      * отрисовать текущее положения поиска и перевести фокус на него (spannable)
      */
-    fun renderSearchPosition(searchPosition: Int)
+    fun renderSearchPosition(searchPosition: Pair<Int, Int>?)
 
     /**
      * очистить результаты поиска (удалить все spannable)

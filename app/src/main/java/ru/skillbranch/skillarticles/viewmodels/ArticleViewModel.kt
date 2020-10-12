@@ -8,9 +8,11 @@ import ru.skillbranch.skillarticles.data.ArticlePersonalInfo
 import ru.skillbranch.skillarticles.data.repositories.ArticleRepository
 import ru.skillbranch.skillarticles.data.repositories.MarkdownElement
 import ru.skillbranch.skillarticles.data.repositories.MarkdownParser
+import ru.skillbranch.skillarticles.data.repositories.clearContent
 import ru.skillbranch.skillarticles.extensions.data.toAppSettings
 import ru.skillbranch.skillarticles.extensions.data.toArticlePersonalInfo
 import ru.skillbranch.skillarticles.extensions.format
+import ru.skillbranch.skillarticles.extensions.indexesOf
 import ru.skillbranch.skillarticles.viewmodels.base.BaseViewModel
 import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
 import ru.skillbranch.skillarticles.viewmodels.base.Notify
@@ -39,7 +41,7 @@ class ArticleViewModel(private val articleId: String): BaseViewModel<ArticleStat
             content ?: return@subscribeOnDataSource null
             state.copy(
                 isLoadingContent = false,
-                content = content
+                content = MarkdownParser.parse(content)
             )
         }
         subscribeOnDataSource(getArticlePersonalInfo()) { info, state ->
@@ -124,8 +126,8 @@ class ArticleViewModel(private val articleId: String): BaseViewModel<ArticleStat
 
     override fun handleSearch(query: String?) {
         query ?: return
-        if (clearContent == null) clearContent = MarkdownParser.clear(currentState.content)
-        val result = currentState.content
+        if (clearContent == null) clearContent = currentState.content.clearContent()
+        val result = clearContent
             .indexesOf(query)
             .map {
                 it to it + query.length

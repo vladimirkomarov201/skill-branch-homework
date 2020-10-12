@@ -7,10 +7,12 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.text.Layout
 import android.text.Spanned
+import androidx.annotation.VisibleForTesting
 import androidx.core.graphics.ColorUtils
 import androidx.core.text.getSpans
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.extensions.*
+import ru.skillbranch.skillarticles.ui.custom.SearchFocusSpan
 import ru.skillbranch.skillarticles.ui.custom.SearchSpan
 import ru.skillbranch.skillarticles.ui.custom.spans.HeaderSpan
 
@@ -100,20 +102,41 @@ class SearchBgHelper(
             spanEnd = text.getSpanEnd(it)
             startLine = layout.getLineForOffset(spanStart)
             endLine = layout.getLineForOffset(spanEnd)
-//            if (it is SearchFocusSpan){
-//                focusListener?.invoke(layout.getLineTop(startLine), layout.getLineBottom(startLine))
-//            }
-//            headerSpans = text.getSpans(spanStart, spanEnd, HeaderSpan::class.java)
-//            topExtraPadding = 0
-//            bottomExtraPadding = 0
-//            if (headerSpans.isNotEmpty()){
-//                topExtraPadding = if (spanStart in headerSpans)
-//            }
+
+            if (it is SearchFocusSpan){
+                focusListener?.invoke(layout.getLineTop(startLine), layout.getLineBottom(startLine))
+            }
+
+            headerSpans = text.getSpans(spanStart, spanEnd, HeaderSpan::class.java)
+
+            topExtraPadding = 0
+            bottomExtraPadding = 0
+
+            if (headerSpans.isNotEmpty()){
+
+                topExtraPadding = if (spanStart in headerSpans.first().firstLineBounds
+                    || spanEnd in headerSpans.first().firstLineBounds
+                ) headerSpans.first().topExtraPadding else 0
+
+                bottomExtraPadding = if (spanStart in headerSpans.first().lastLineBounds
+                    || spanEnd in headerSpans.first().lastLineBounds
+                ) headerSpans.first().bottomExtraPadding else 0
+
+            }
+
             startOffset = layout.getPrimaryHorizontal(spanStart).toInt()
             endOffset = layout.getPrimaryHorizontal(spanEnd).toInt()
+
             render = if (startLine == endLine) singleLineRender else multiLineRender
             render.draw(
-                canvas, layout, startLine, endLine, startOffset, endOffset, topExtraPadding, bottomExtraPadding
+                canvas,
+                layout,
+                startLine,
+                endLine,
+                startOffset,
+                endOffset,
+                topExtraPadding,
+                bottomExtraPadding
             )
         }
     }
