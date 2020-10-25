@@ -9,7 +9,6 @@ import ru.skillbranch.skillarticles.data.repositories.MarkdownElement
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
 import ru.skillbranch.skillarticles.extensions.groupByBounds
 import ru.skillbranch.skillarticles.extensions.setPaddingOptionally
-import ru.skillbranch.skillarticles.markdown.MarkdownBuilder
 import kotlin.properties.Delegates
 
 class MarkdownContentView @JvmOverloads constructor(
