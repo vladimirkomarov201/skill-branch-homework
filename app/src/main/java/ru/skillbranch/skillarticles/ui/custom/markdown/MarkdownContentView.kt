@@ -18,8 +18,7 @@ class MarkdownContentView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr) {
 
-    lateinit var elements: List<MarkdownElement>
-        private set
+    private lateinit var elements: List<MarkdownElement>
 
     //for restore
     private var ids = arrayListOf<Int>()
