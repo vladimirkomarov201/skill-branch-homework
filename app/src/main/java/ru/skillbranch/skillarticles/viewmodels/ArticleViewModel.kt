@@ -3,6 +3,7 @@ package ru.skillbranch.skillarticles.viewmodels
 import android.os.Bundle
 import androidx.core.os.bundleOf
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.SavedStateHandle
 import ru.skillbranch.skillarticles.data.ArticleData
 import ru.skillbranch.skillarticles.data.ArticlePersonalInfo
 import ru.skillbranch.skillarticles.data.repositories.ArticleRepository
@@ -17,9 +18,10 @@ import ru.skillbranch.skillarticles.viewmodels.base.BaseViewModel
 import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
 import ru.skillbranch.skillarticles.viewmodels.base.Notify
 
-class ArticleViewModel(private val articleId: String): BaseViewModel<ArticleState>(
-    ArticleState()
-), IArticleViewModel {
+class ArticleViewModel(
+    handle: SavedStateHandle,
+    private val articleId: String
+): BaseViewModel<ArticleState>(ArticleState()), IArticleViewModel {
 
     private val repository = ArticleRepository
 
@@ -133,6 +135,10 @@ class ArticleViewModel(private val articleId: String): BaseViewModel<ArticleStat
                 it to it + query.length
             }
         updateState { it.copy(searchQuery = query, searchResults = result, searchPosition = 0) }
+    }
+
+    fun handleSendComment() {
+
     }
 
 }
