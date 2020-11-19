@@ -35,7 +35,7 @@ import ru.skillbranch.skillarticles.viewmodels.ArticleViewModel
 import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
 import ru.skillbranch.skillarticles.viewmodels.base.ViewModelFactory
 
-class ArticlesFragment: BaseFragment<ArticleViewModel>(), IArticleView {
+class ArticleFragment: BaseFragment<ArticleViewModel>(), IArticleView {
 
     private val args: ArticleFragmentArgs by navArgs()
 
