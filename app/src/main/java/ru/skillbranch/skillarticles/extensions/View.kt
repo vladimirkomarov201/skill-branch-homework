@@ -24,7 +24,10 @@ fun View.setPaddingOptionally(left:Int = paddingEnd, top : Int = paddingTop, rig
 }
 
 fun BottomNavigationView.selectDestination(destination: NavDestination){
-    when(destination.id){
-        R.id.nav_articles -> this.selectedItemId
+    when(destination.parent?.id){
+        R.id.nav_articles -> selectedItemId = R.id.nav_articles
+        R.id.nav_profile -> selectedItemId = R.id.nav_profile
+        R.id.nav_bookmarks -> selectedItemId = R.id.nav_bookmarks
+        R.id.nav_transcriptions -> selectedItemId = R.id.nav_transcriptions
     }
 }
