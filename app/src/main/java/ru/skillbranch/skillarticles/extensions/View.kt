@@ -6,6 +6,9 @@ import androidx.core.view.marginBottom
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
 import androidx.core.view.marginTop
+import androidx.navigation.NavDestination
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import ru.skillbranch.skillarticles.R
 
 
 fun View.setMarginOptionally(left:Int = marginLeft, top : Int = marginTop, right : Int = marginRight, bottom : Int = marginBottom){
@@ -18,4 +21,10 @@ fun View.setPaddingOptionally(left:Int = paddingEnd, top : Int = paddingTop, rig
 //    val lp = layoutParams as ViewGroup.MarginLayoutParams
 //    lp.setMargins(left, top, right, bottom)
 //    layoutParams = lp
+}
+
+fun BottomNavigationView.selectDestination(destination: NavDestination){
+    when(destination.id){
+        R.id.nav_articles -> this.selectedItemId
+    }
 }

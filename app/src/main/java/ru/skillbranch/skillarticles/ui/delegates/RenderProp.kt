@@ -4,9 +4,9 @@ import ru.skillbranch.skillarticles.ui.base.Binding
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-class RenderProp <T> (
+class RenderProp <T: Any> (
     var value: T,
-    needInit: Boolean = true,
+    private val needInit: Boolean = true,
     private val onChange: ((T) -> Unit)? = null
 ): ReadWriteProperty<Binding, T> {
 
@@ -14,6 +14,19 @@ class RenderProp <T> (
 
     init {
         if (needInit) onChange?.invoke(value)
+    }
+
+    fun bind() {
+        if (needInit) onChange?.invoke(value)
+    }
+
+    operator fun provideDelegate(
+        thisRef: Binding,
+        prop: KProperty<*>
+    ): ReadWriteProperty<Binding, T>{
+        val delegate = RenderProp(value, needInit, onChange)
+        registerDelegate(thisRef, prop.name, delegate)
+        return delegate
     }
 
     override fun getValue(thisRef: Binding, property: KProperty<*>): T = value
@@ -29,22 +42,6 @@ class RenderProp <T> (
 
     fun addListener(listener: () -> Unit){
         listeners.add(listener)
-    }
-
-}
-
-class ObserveProp <T: Any> (
-    var value: T,
-    private val onChange: ((T) -> Unit)? = null
-){
-
-    operator fun provideDelegate(
-        thisRef: Binding,
-        prop: KProperty<*>
-    ): ReadWriteProperty<Binding, T>{
-        val delegate = RenderProp(value, true, onChange)
-        registerDelegate(thisRef, prop.name, delegate)
-        return delegate
     }
 
     private fun registerDelegate(thisRef: Binding, name: String, delegate: RenderProp<T>){

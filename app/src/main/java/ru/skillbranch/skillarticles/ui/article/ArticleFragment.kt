@@ -28,7 +28,6 @@ import ru.skillbranch.skillarticles.extensions.dpToIntPx
 import ru.skillbranch.skillarticles.extensions.format
 import ru.skillbranch.skillarticles.extensions.setMarginOptionally
 import ru.skillbranch.skillarticles.ui.base.*
-import ru.skillbranch.skillarticles.ui.delegates.ObserveProp
 import ru.skillbranch.skillarticles.ui.delegates.RenderProp
 import ru.skillbranch.skillarticles.viewmodels.ArticleState
 import ru.skillbranch.skillarticles.viewmodels.ArticleViewModel
@@ -226,7 +225,7 @@ class ArticleFragment: BaseFragment<ArticleViewModel>(), IArticleView {
         var isFocusedSearch: Boolean = false
         var searchQuery: String? = null
 
-        private var isLoadingContent by ObserveProp(true)
+        private var isLoadingContent by RenderProp(true)
         private var isLike: Boolean by RenderProp(false) {btn_like.isChecked = it}
         private var isBookmark: Boolean by RenderProp(false) {btn_bookmark.isChecked = it}
         private var isShowMenu: Boolean by RenderProp(false) {
@@ -251,7 +250,7 @@ class ArticleFragment: BaseFragment<ArticleViewModel>(), IArticleView {
             root.delegate.localNightMode = if (switch_mode.isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
         }
 
-        var isSearch: Boolean by ObserveProp(false) {
+        var isSearch: Boolean by RenderProp(false) {
             if (it) {
                 showSearchBar()
                 with(toolbar) {

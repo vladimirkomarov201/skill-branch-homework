@@ -1,6 +1,5 @@
 package ru.skillbranch.skillarticles.viewmodels.auth
 
-import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import ru.skillbranch.skillarticles.data.repositories.RootRepository
 import ru.skillbranch.skillarticles.viewmodels.base.BaseViewModel
@@ -27,11 +26,11 @@ class AuthViewModel(
 }
 
 data class AuthState(val isAuth: Boolean = false): IViewModelState {
-    override fun save(outState: Bundle) {
+    override fun save(outState: SavedStateHandle) {
 
     }
 
-    override fun restore(savedState: Bundle): IViewModelState {
+    override fun restore(savedState: SavedStateHandle): IViewModelState {
         return this
     }
 }

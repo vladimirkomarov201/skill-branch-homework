@@ -103,15 +103,6 @@ abstract class BaseViewModel<T : IViewModelState>(
         }
     }
 
-    fun saveState(outState: Bundle){
-        currentState.save(outState)
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    fun restoreState(savedState:Bundle){
-        state.value = currentState.restore(savedState) as T
-    }
-
 }
 
 class Event<out E>(private val content: E) {
