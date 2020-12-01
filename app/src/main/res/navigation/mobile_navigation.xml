@@ -85,7 +85,7 @@
     <!--global actions -->
     <action
         android:id="@+id/start_login"
-        app:destination="@id/auth"/>
+        app:destination="@id/auth" />
     <action
         android:id="@+id/finish_login"
         app:popUpTo="@id/auth"

@@ -13,6 +13,7 @@ import ru.skillbranch.skillarticles.extensions.format
 import ru.skillbranch.skillarticles.extensions.indexesOf
 import ru.skillbranch.skillarticles.viewmodels.base.BaseViewModel
 import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
+import ru.skillbranch.skillarticles.viewmodels.base.NavigationCommand
 import ru.skillbranch.skillarticles.viewmodels.base.Notify
 
 class ArticleViewModel(
@@ -138,7 +139,8 @@ class ArticleViewModel(
     }
 
     fun handleSendComment() {
-
+        if (!currentState.isAuth) navigate(NavigationCommand.StartLogin())
+        //todo
     }
 
 }

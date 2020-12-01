@@ -49,7 +49,7 @@ class ArticleFragment: BaseFragment<ArticleViewModel>(), IArticleView {
     override val binding: ArticleBinding by lazy { ArticleBinding() }
 
     override val prepareToolbar: (ToolbarBuilder.() -> Unit)? = {
-        setTitle(args.category)
+        setTitle(args.title)
             .setSubtitle(args.category)
             .setLogo(args.categoryIcon)
             .addMenuItem(
@@ -117,15 +117,15 @@ class ArticleFragment: BaseFragment<ArticleViewModel>(), IArticleView {
     }
 
     override fun renderSearchResult(searchResult: List<Pair<Int, Int>>) {
-        TODO("Not yet implemented")
+        //todo
     }
 
     override fun renderSearchPosition(searchPosition: Pair<Int, Int>?) {
-        TODO("Not yet implemented")
+        //todo
     }
 
     override fun clearSearchResult() {
-        TODO("Not yet implemented")
+        //todo
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
@@ -199,12 +199,12 @@ class ArticleFragment: BaseFragment<ArticleViewModel>(), IArticleView {
         bottombar.btn_settings.setOnClickListener {
             viewModel.handleToggleMenu()
         }
-        btn_result_up.setOnClickListener {
+        bottombar.btn_result_up.setOnClickListener {
             if (tv_text_content.hasFocus()) tv_text_content.requestFocus()
 //            hideKeyboard(btn_result_up)
 //            viewModel.handleUpResult()
         }
-        btn_result_down.setOnClickListener {
+        bottombar.btn_result_down.setOnClickListener {
             if (tv_text_content.hasFocus()) tv_text_content.requestFocus()
 //            hideKeyboard(btn_result_down)
 //            viewModel.handleDownResult()
@@ -226,22 +226,22 @@ class ArticleFragment: BaseFragment<ArticleViewModel>(), IArticleView {
         var searchQuery: String? = null
 
         private var isLoadingContent by RenderProp(true)
-        private var isLike: Boolean by RenderProp(false) {btn_like.isChecked = it}
-        private var isBookmark: Boolean by RenderProp(false) {btn_bookmark.isChecked = it}
+        private var isLike: Boolean by RenderProp(false) {bottombar.btn_like.isChecked = it}
+        private var isBookmark: Boolean by RenderProp(false) {bottombar.btn_bookmark.isChecked = it}
         private var isShowMenu: Boolean by RenderProp(false) {
-            btn_settings.isChecked = it
+            bottombar.btn_settings.isChecked = it
             if (it) submenu.open() else submenu.close()
         }
 
         private var isBigText: Boolean by RenderProp(false) {
             if (it) {
                 tv_text_content.textSize = 18f
-                btn_text_up.isChecked = true
-                btn_text_down.isChecked = false
+                submenu.btn_text_up.isChecked = true
+                submenu.btn_text_down.isChecked = false
             } else {
                 tv_text_content.textSize = 14f
-                btn_text_up.isChecked = false
-                btn_text_down.isChecked = true
+                submenu.btn_text_up.isChecked = false
+                submenu.btn_text_down.isChecked = true
             }
         }
 
