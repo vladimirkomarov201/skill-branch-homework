@@ -11,6 +11,7 @@ import ru.skillbranch.skillarticles.extensions.data.toAppSettings
 import ru.skillbranch.skillarticles.extensions.data.toArticlePersonalInfo
 import ru.skillbranch.skillarticles.extensions.format
 import ru.skillbranch.skillarticles.extensions.indexesOf
+import ru.skillbranch.skillarticles.viewmodels.article.IArticleViewModel
 import ru.skillbranch.skillarticles.viewmodels.base.BaseViewModel
 import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
 import ru.skillbranch.skillarticles.viewmodels.base.NavigationCommand
@@ -138,7 +139,19 @@ class ArticleViewModel(
         updateState { it.copy(searchQuery = query, searchResults = result, searchPosition = 0) }
     }
 
-    fun handleSendComment() {
+    override fun handleUpResult() {
+        TODO("Not yet implemented")
+    }
+
+    override fun handleDownResult() {
+        TODO("Not yet implemented")
+    }
+
+    override fun handleCopyCode() {
+        TODO("Not yet implemented")
+    }
+
+    override fun handleSendComment() {
         if (!currentState.isAuth) navigate(NavigationCommand.StartLogin())
         //todo
     }
