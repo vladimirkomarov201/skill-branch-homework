@@ -21,7 +21,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import junit.framework.Assert.assertEquals
-import kotlinx.android.synthetic.main.activity_root.*
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -284,12 +283,12 @@ class InstrumentalTest1 {
         onView(withId(R.id.et_comment))
             .perform(customScrollTo(), click(), pressImeActionButton())
         sleep(1000)
-//        onView(withId(R.id.rv_comments))
-//            .check(
-//                matches(
-//                    atPositionOnView(0, allOf(withText("comment text")), R.id.tv_comment_body)
-//                )
-//            )
+        onView(withId(R.id.rv_comments))
+            .check(
+                matches(
+                    atPositionOnView(0, allOf(withText("comment text")), R.id.tv_comment_body)
+                )
+            )
         sleep(5000)
         onView(withId(R.id.rv_comments))
             .perform(
@@ -302,12 +301,12 @@ class InstrumentalTest1 {
         onView(withId(R.id.et_comment))
             .perform(customScrollTo(), replaceText("reply text"), pressImeActionButton())
         sleep(5000)
-//        onView(withId(R.id.rv_comments))
-//            .check(
-//                matches(
-//                    atPositionOnView(0, allOf(withText("comment text")), R.id.tv_comment_body)
-//                )
-//            )
+        onView(withId(R.id.rv_comments))
+            .check(
+                matches(
+                    atPositionOnView(0, allOf(withText("comment text")), R.id.tv_comment_body)
+                )
+            )
     }
 
     private fun customScrollTo(): ViewAction = object : ViewAction {
