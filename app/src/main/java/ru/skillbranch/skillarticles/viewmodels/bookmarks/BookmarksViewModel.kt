@@ -7,8 +7,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.skillbranch.skillarticles.data.models.ArticleItemData
-import ru.skillbranch.skillarticles.data.repositories.*
-import ru.skillbranch.skillarticles.viewmodels.articles.ArticlesBoundaryCallback
+import ru.skillbranch.skillarticles.data.repositories.ArticleStrategy
+import ru.skillbranch.skillarticles.data.repositories.ArticlesDataFactory
+import ru.skillbranch.skillarticles.data.repositories.ArticlesRepository
 import ru.skillbranch.skillarticles.viewmodels.base.BaseViewModel
 import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
 import ru.skillbranch.skillarticles.viewmodels.base.Notify
@@ -41,6 +42,11 @@ class BookmarksViewModel(handle: SavedStateHandle) : BaseViewModel<BookmarksStat
         onChange: (list: PagedList<ArticleItemData>) -> Unit
     ) {
         listData.observe(owner, Observer {onChange(it)})
+    }
+
+    fun handleToggleBookmark(id: String, isBookmark: Boolean) {
+        notify(Notify.TextMessage("toggle"))
+        repository.updateBookmark(id, isBookmark)
     }
 
     private fun buildPagedList(
