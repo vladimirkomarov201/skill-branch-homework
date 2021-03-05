@@ -290,8 +290,9 @@ class ArticleItemView constructor(
         tv_read_duration.text = "${item.readDuration} min read"
         iv_bookmark.isChecked = item.isBookmark
         iv_bookmark.setOnClickListener {
-            (it as CheckableImageView).isChecked = !item.isBookmark
-            toggleBookmarkListener?.invoke(item.id, !item.isBookmark)
+            it as CheckableImageView
+            it.toggle()
+            toggleBookmarkListener?.invoke(item.id, it.isChecked)
         }
     }
 }

@@ -10,15 +10,11 @@ class CheckableImageView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : AppCompatImageView(context, attrs, defStyleAttr), Checkable, View.OnClickListener{
+) : AppCompatImageView(context, attrs, defStyleAttr), Checkable{
     private var checked = false
 
     companion object {
         private val CHECKED_STATE_SET = intArrayOf(android.R.attr.state_checked)
-    }
-
-    init {
-        setOnClickListener(this)
     }
 
     override fun onCreateDrawableState(extraSpace: Int): IntArray {
@@ -37,10 +33,6 @@ class CheckableImageView @JvmOverloads constructor(
         if(checked == check) return
         checked = check
         refreshDrawableState()
-    }
-
-    override fun onClick(v: View?) {
-        toggle()
     }
 
 
