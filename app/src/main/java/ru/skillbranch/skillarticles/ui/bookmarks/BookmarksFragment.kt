@@ -39,7 +39,9 @@ class BookmarksFragment : BaseFragment<BookmarksViewModel>() {
         )
     }
 
-    private val articlesAdapter = ArticlesAdapter(listener = ::listener, toggle = viewModel::handleToggleBookmark)
+    private val articlesAdapter = ArticlesAdapter(listener = ::listener, toggle = {id, isBookMark ->
+        viewModel.handleToggleBookmark(id, isBookMark)
+    })
 
     private fun listener(item: ArticleItemData) {
         val action = ArticlesFragmentDirections.actionNavArticlesToPageArticle(
