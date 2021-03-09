@@ -16,7 +16,8 @@ import ru.skillbranch.skillarticles.viewmodels.base.Notify
 import java.util.concurrent.Executors
 
 class BookmarksViewModel(handle: SavedStateHandle) : BaseViewModel<BookmarksState>(handle, BookmarksState()) {
-    val repository = ArticlesRepository
+
+    private val repository = ArticlesRepository
 
     private val listConfig by lazy {
         PagedList.Config.Builder()
@@ -47,6 +48,7 @@ class BookmarksViewModel(handle: SavedStateHandle) : BaseViewModel<BookmarksStat
     fun handleToggleBookmark(id: String, isBookmark: Boolean) {
         notify(Notify.TextMessage("toggle"))
         repository.updateBookmark(id, isBookmark)
+        listData.value?.dataSource?.invalidate()
     }
 
     private fun buildPagedList(
