@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import ru.skillbranch.skillarticles.App
 import ru.skillbranch.skillarticles.BuildConfig
-import ru.skillbranch.skillarticles.data.local.dao.ArticlesDao
+import ru.skillbranch.skillarticles.data.local.dao.*
 import ru.skillbranch.skillarticles.data.local.entities.Article
 import ru.skillbranch.skillarticles.data.local.entities.ArticleFull
 import ru.skillbranch.skillarticles.data.local.entities.ArticleItem
@@ -38,5 +38,10 @@ abstract class AppDb: RoomDatabase(){
     }
 
     abstract fun articlesDao(): ArticlesDao
+    abstract fun articleCountsDao(): ArticleCountsDao
+    abstract fun categoriesDao(): CategoriesDao
+    abstract fun articlePersonalInfosDao(): ArticlePersonalInfosDao
+    abstract fun tagsDao(): TagsDao
+    abstract fun articleContentsDao(): ArticleContentsDao
 
 }

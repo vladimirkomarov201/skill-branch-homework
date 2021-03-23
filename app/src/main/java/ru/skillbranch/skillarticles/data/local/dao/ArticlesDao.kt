@@ -42,7 +42,7 @@ interface ArticlesDao: BaseDao<Article> {
     fun findArticlesByTagId(tag: String): List<ArticleItem>
 
     @RawQuery(observedEntities = [ArticleItem::class])
-    fun findArticlesByRow(simpleSQLiteQuery: SimpleSQLiteQuery): DataSource.Factory<Int, ArticleItem>
+    fun findArticlesByRaw(simpleSQLiteQuery: SimpleSQLiteQuery): DataSource.Factory<Int, ArticleItem>
 
     @Query("""
         SELECT * FROM ArticleFull WHERE id = :articleId
