@@ -6,6 +6,7 @@ import androidx.paging.PagedList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.skillbranch.skillarticles.data.local.entities.CategoryData
 import ru.skillbranch.skillarticles.data.models.ArticleItemData
 import ru.skillbranch.skillarticles.data.repositories.ArticleStrategy
 import ru.skillbranch.skillarticles.data.repositories.ArticlesDataFactory
@@ -17,7 +18,8 @@ import java.util.concurrent.Executors
 
 class ArticlesViewModel(handle: SavedStateHandle) :
     BaseViewModel<ArticlesState>(handle, ArticlesState()) {
-    val repository = ArticlesRepository
+
+    private val repository = ArticlesRepository
 
     private val listConfig by lazy {
         PagedList.Config.Builder()
@@ -28,21 +30,16 @@ class ArticlesViewModel(handle: SavedStateHandle) :
             .build()
     }
     private val listData = Transformations.switchMap(state) {
-        when {
-            it.isSearch && !it.searchQuery.isNullOrBlank() -> buildPagedList(
-                repository.searchArticles(
-                    it.searchQuery
-                )
-            )
-            else -> buildPagedList(repository.allArticles())
-        }
+        val filter = it.toArticleFilter()
+        return@switchMap buildPagedList(repository.rawQueryArticles(filter))
     }
 
-    fun observeList(
-        owner: LifecycleOwner,
-        onChange: (list: PagedList<ArticleItemData>) -> Unit
-    ) {
-        listData.observe(owner, Observer {onChange(it)})
+    fun observeTags(owner: LifecycleOwner, onChange: (list: List<String>) -> Unit){
+        repository.findTags().observe(owner, Observer(onChange))
+    }
+
+    fun observeCategories(owner: LifecycleOwner, onChange: (list: List<CategoryData>) -> Unit){
+        repository.findCategoriesData().observe(owner, Observer(onChange))
     }
 
     private fun buildPagedList(
@@ -87,6 +84,11 @@ class ArticlesViewModel(handle: SavedStateHandle) :
             }
         }
     }
+
+    private fun isEmptyFilter(): Boolean = currentState.searchQuery.isNullOrEmpty()
+            && !currentState.isBookmark
+            && currentState.selectedCategories.isEmpty()
+            && !currentState.isHashtagSearch
 
     private fun zeroLoadingHandle() {
         notify(Notify.TextMessage("Storage is empty"))
