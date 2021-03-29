@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_bookmarks.*
 import ru.skillbranch.skillarticles.R
-import ru.skillbranch.skillarticles.data.models.ArticleItemData
+import ru.skillbranch.skillarticles.data.local.entities.ArticleItem
 import ru.skillbranch.skillarticles.ui.articles.ArticlesAdapter
 import ru.skillbranch.skillarticles.ui.articles.ArticlesFragmentDirections
 import ru.skillbranch.skillarticles.ui.base.BaseFragment
@@ -43,11 +43,11 @@ class BookmarksFragment : BaseFragment<BookmarksViewModel>() {
         viewModel.handleToggleBookmark(id, isBookMark)
     })
 
-    private fun listener(item: ArticleItemData) {
+    private fun listener(item: ArticleItem) {
         val action = ArticlesFragmentDirections.actionNavArticlesToPageArticle(
             item.id,
             item.author,
-            item.authorAvatar,
+            item.authorAvatar.orEmpty(),
             item.category,
             item.categoryIcon,
             item.date,
@@ -110,7 +110,7 @@ class BookmarksFragment : BaseFragment<BookmarksViewModel>() {
             addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
         }
         viewModel.observeList(viewLifecycleOwner) {
-            articlesAdapter.submitList(it)
+//            articlesAdapter.submitList(it)
         }
     }
 

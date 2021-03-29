@@ -5,7 +5,6 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.skillbranch.skillarticles.data.models.ArticleItemData
 import ru.skillbranch.skillarticles.data.repositories.ArticleStrategy
 import ru.skillbranch.skillarticles.data.repositories.ArticlesDataFactory
@@ -27,16 +26,7 @@ class BookmarksViewModel(handle: SavedStateHandle) : BaseViewModel<BookmarksStat
             .setInitialLoadSizeHint(50)
             .build()
     }
-    private val listData = Transformations.switchMap(state) {
-        when {
-            it.isSearch && !it.searchQuery.isNullOrBlank() -> buildPagedList(
-                repository.searchBookmarks(
-                    it.searchQuery
-                )
-            )
-            else -> buildPagedList(repository.allBookmarks())
-        }
-    }
+    private val listData = MutableLiveData<PagedList<ArticleItemData>>()
 
     fun observeList(
         owner: LifecycleOwner,
@@ -47,7 +37,7 @@ class BookmarksViewModel(handle: SavedStateHandle) : BaseViewModel<BookmarksStat
 
     fun handleToggleBookmark(id: String, isBookmark: Boolean) {
         notify(Notify.TextMessage("toggle"))
-        repository.updateBookmark(id, isBookmark)
+//        repository.updateBookmark(id, isBookmark)
         listData.value?.dataSource?.invalidate()
     }
 
@@ -75,28 +65,28 @@ class BookmarksViewModel(handle: SavedStateHandle) : BaseViewModel<BookmarksStat
 
     private fun itemAtEndHandle(lastLoadArticle: ArticleItemData) {
         viewModelScope.launch(Dispatchers.IO) {
-            val items = repository.loadArticlesFromDb(
-                start = lastLoadArticle.id.toInt().inc(),
-                size = listConfig.pageSize
-            )
-            withContext(Dispatchers.Main) {
-                notify(
-                    Notify.TextMessage(
-                        "Load from db articles from ${items.firstOrNull()?.id}" +
-                                "to ${items.lastOrNull()?.id}"
-                    )
-                )
-            }
+//            val items = repository.loadArticlesFromDb(
+//                start = lastLoadArticle.id.toInt().inc(),
+//                size = listConfig.pageSize
+//            )
+//            withContext(Dispatchers.Main) {
+//                notify(
+//                    Notify.TextMessage(
+//                        "Load from db articles from ${items.firstOrNull()?.id}" +
+//                                "to ${items.lastOrNull()?.id}"
+//                    )
+//                )
+//            }
         }
     }
 
     private fun zeroLoadingHandle() {
         notify(Notify.TextMessage("Storage is empty"))
         viewModelScope.launch(Dispatchers.IO) {
-            val items = repository.loadArticlesFromDb(
-                start = 0,
-                size = listConfig.initialLoadSizeHint
-            )
+//            val items = repository.loadArticlesFromDb(
+//                start = 0,
+//                size = listConfig.initialLoadSizeHint
+//            )
         }
     }
 

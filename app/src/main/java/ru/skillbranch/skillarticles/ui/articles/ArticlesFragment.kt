@@ -15,7 +15,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_articles.*
 import ru.skillbranch.skillarticles.R
-import ru.skillbranch.skillarticles.data.models.ArticleItemData
+import ru.skillbranch.skillarticles.data.local.entities.ArticleItem
+import ru.skillbranch.skillarticles.data.local.entities.CategoryData
 import ru.skillbranch.skillarticles.ui.base.BaseFragment
 import ru.skillbranch.skillarticles.ui.base.Binding
 import ru.skillbranch.skillarticles.ui.base.MenuItemHolder
@@ -47,11 +48,11 @@ class ArticlesFragment : BaseFragment<ArticlesViewModel>() {
                 R.drawable.ic_content_copy_black_24dp,
                 null
             ){_->
-                val action = ArticlesFragmentDirections.choseCategory(
-                    binding.selectedCategories.toTypedArray(),
-                    binding.categories.toTypedArray()
-                )
-                viewModel.navigate(NavigationCommand.To(action.actionId, action.arguments))
+//                val action = ArticlesFragmentDirections.choseCategory(
+//                    binding.selectedCategories.toTypedArray(),
+//                    binding.categories.toTypedArray()
+//                )
+//                viewModel.navigate(NavigationCommand.To(action.actionId, action.arguments))
             }
         )
     }
@@ -74,11 +75,11 @@ class ArticlesFragment : BaseFragment<ArticlesViewModel>() {
         setHasOptionsMenu(true)
     }
 
-    private fun listener(item: ArticleItemData) {
+    private fun listener(item: ArticleItem) {
         val action = ArticlesFragmentDirections.actionNavArticlesToPageArticle(
             item.id,
             item.author,
-            item.authorAvatar,
+            item.authorAvatar.orEmpty(),
             item.category,
             item.categoryIcon,
             item.date,
@@ -189,6 +190,7 @@ class ArticlesFragment : BaseFragment<ArticlesViewModel>() {
     }
 
     inner class ArticlesBinding : Binding() {
+        var categories: List<CategoryData> = emptyList()
         var isFocusedSearch: Boolean = false
         var searchQuery: String? = null
         var isSearch: Boolean = false

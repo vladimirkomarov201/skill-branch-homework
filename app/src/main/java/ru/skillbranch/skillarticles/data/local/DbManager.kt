@@ -7,9 +7,7 @@ import androidx.room.TypeConverters
 import ru.skillbranch.skillarticles.App
 import ru.skillbranch.skillarticles.BuildConfig
 import ru.skillbranch.skillarticles.data.local.dao.*
-import ru.skillbranch.skillarticles.data.local.entities.Article
-import ru.skillbranch.skillarticles.data.local.entities.ArticleFull
-import ru.skillbranch.skillarticles.data.local.entities.ArticleItem
+import ru.skillbranch.skillarticles.data.local.entities.*
 
 object DbManager {
 
@@ -23,7 +21,13 @@ object DbManager {
 
 @Database(
     entities = [
-        Article::class
+        Article::class,
+        ArticleCounts::class,
+        Category::class,
+        ArticlePersonalInfo::class,
+        Tag::class,
+        ArticleTagXRef::class,
+        ArticleContent::class
     ],
     version = AppDb.DATABASE_VERSION,
     exportSchema = true,
