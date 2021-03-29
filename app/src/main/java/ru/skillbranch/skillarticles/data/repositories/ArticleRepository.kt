@@ -15,6 +15,7 @@ import ru.skillbranch.skillarticles.data.local.entities.ArticleFull
 import ru.skillbranch.skillarticles.data.models.AppSettings
 import ru.skillbranch.skillarticles.data.models.CommentItemData
 import ru.skillbranch.skillarticles.data.models.User
+import ru.skillbranch.skillarticles.extensions.data.toArticleContent
 import java.lang.Thread.sleep
 import kotlin.math.abs
 
@@ -55,12 +56,12 @@ object ArticleRepository: IArticleRepository {
     }
 
     override fun findArticle(articleId: String): LiveData<ArticleFull> {
-        TODO("Not yet implemented")
+        return articlesDao.findFullArticle(articleId)
     }
 
     override fun getAppSettings(): LiveData<AppSettings> = preferences.getAppSettings() //from preferences
     override fun toggleLike(articleId: String) {
-        TODO("Not yet implemented")
+        articlePersonalDao.toggleLikeOrInsert(articleId)
     }
 
     override fun updateSettings(appSettings: AppSettings) {
@@ -72,11 +73,12 @@ object ArticleRepository: IArticleRepository {
     }
 
     override fun fetchArticleContent(articleId: String) {
-        TODO("Not yet implemented")
+        val context = network.loadArticleContent(articleId).apply { sleep(1500) }
+        articleContentDao.insert(context.toArticleContent())
     }
 
     override fun findArticleCommentCount(articleId: String): LiveData<Int> {
-        TODO("Not yet implemented")
+        return articleCountsDao.getCommentsCount(articleId)
     }
 
     override fun isAuth(): MutableLiveData<Boolean> = preferences.isAuth()
@@ -116,15 +118,19 @@ object ArticleRepository: IArticleRepository {
     }
 
     override fun loadAllComments(articleId: String, totalCount: Int): CommentsDataFactory {
-        TODO("Not yet implemented")
+        return CommentsDataFactory(
+            itemProvider = ::loadCommentsByRange,
+            articleId = articleId,
+            totalCount = totalCount
+        )
     }
 
     override fun decrementLike(articleId: String) {
-        TODO("Not yet implemented")
+        articleCountsDao.decrementLike(articleId)
     }
 
     override fun incrementLike(articleId: String) {
-        TODO("Not yet implemented")
+        articleCountsDao.incrementLike(articleId)
     }
 }
 
