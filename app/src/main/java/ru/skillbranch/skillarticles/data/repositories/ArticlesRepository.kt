@@ -3,7 +3,6 @@ package ru.skillbranch.skillarticles.data.repositories
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
-import androidx.paging.PositionalDataSource
 import androidx.sqlite.db.SimpleSQLiteQuery
 import ru.skillbranch.skillarticles.data.NetworkDataHolder
 import ru.skillbranch.skillarticles.data.local.DbManager.db
@@ -12,7 +11,6 @@ import ru.skillbranch.skillarticles.data.local.entities.ArticleItem
 import ru.skillbranch.skillarticles.data.local.entities.ArticleTagXRef
 import ru.skillbranch.skillarticles.data.local.entities.CategoryData
 import ru.skillbranch.skillarticles.data.local.entities.Tag
-import ru.skillbranch.skillarticles.data.models.ArticleItemData
 import ru.skillbranch.skillarticles.data.remote.res.ArticleRes
 import ru.skillbranch.skillarticles.extensions.data.toArticle
 import ru.skillbranch.skillarticles.extensions.data.toArticleCounts
@@ -92,56 +90,6 @@ object ArticlesRepository: IArticlesRepository {
         tagsDao.incrementTagUseCount(tag)
     }
 
-}
-
-class ArticlesDataFactory(val strategy: ArticleStrategy) :
-    DataSource.Factory<Int, ArticleItemData>() {
-    override fun create(): DataSource<Int, ArticleItemData> = ArticleDataSource(strategy)
-}
-
-class ArticleDataSource(private val strategy: ArticleStrategy) :
-    PositionalDataSource<ArticleItemData>() {
-    override fun loadInitial(
-        params: LoadInitialParams,
-        callback: LoadInitialCallback<ArticleItemData>
-    ) {
-        val result = strategy.getItems(params.requestedStartPosition, params.requestedLoadSize)
-        callback.onResult(result, params.requestedStartPosition)
-    }
-
-    override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<ArticleItemData>) {
-        val result = strategy.getItems(params.startPosition, params.loadSize)
-        callback.onResult(result)
-    }
-}
-
-sealed class ArticleStrategy() {
-    abstract fun getItems(start: Int, size: Int): List<ArticleItemData>
-
-    class AllArticles(
-        private val itemProvider: (Int, Int) -> List<ArticleItemData>
-    ) : ArticleStrategy() {
-        override fun getItems(start: Int, size: Int): List<ArticleItemData> =
-            itemProvider(start, size)
-    }
-
-    class SearchArticle(
-        private val itemProvider: (Int, Int, String) -> List<ArticleItemData>,
-        private val query: String
-    ) : ArticleStrategy() {
-        override fun getItems(start: Int, size: Int): List<ArticleItemData> =itemProvider(start, size, query)
-    }
-
-    class SearchBookmark(private val itemProvider: (Int, Int, String) -> List<ArticleItemData>,
-                         private val query: String) : ArticleStrategy() {
-        override fun getItems(start: Int, size: Int): List<ArticleItemData> =
-            itemProvider(start, size, query)
-    }
-
-    class BookmarkArticles(private val itemProvider: (Int, Int) -> List<ArticleItemData>) : ArticleStrategy() {
-        override fun getItems(start: Int, size: Int): List<ArticleItemData> =
-            itemProvider(start, size)
-    }
 }
 
 class ArticleFilter(
