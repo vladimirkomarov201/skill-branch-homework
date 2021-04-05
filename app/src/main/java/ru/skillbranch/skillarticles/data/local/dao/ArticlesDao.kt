@@ -23,13 +23,13 @@ interface ArticlesDao: BaseDao<Article> {
     }
 
     @Query("SELECT * FROM articles")
-    fun findArticles(): List<Article>
+    fun findArticles(): LiveData<List<Article>>
 
     @Query("SELECT * FROM articles WHERE id = :id")
     fun findArticleById(id: String): Article
 
     @Query("SELECT * FROM ArticleItem")
-    fun findArticleItems(): List<ArticleItem>
+    fun findArticleItems(): LiveData<List<ArticleItem>>
 
     @Query("SELECT * FROM ArticleItem WHERE category_id IN (:categoryIds)")
     fun findArticleItemsByCategoryIds(categoryIds: List<String>): List<ArticleItem>
