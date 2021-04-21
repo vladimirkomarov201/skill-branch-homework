@@ -101,8 +101,8 @@ class ArticleFilter(
 
     fun toQuery(): String{
         val qb = QueryBuilder()
-        qb.table("ArticleItem ")
-        if (search != null && !isHashtag) qb.appendWhere("title LIKE '%$search%")
+        qb.table("ArticleItem")
+        if (search != null && !isHashtag) qb.appendWhere("title LIKE '%$search%'")
         if (search != null && isHashtag){
             qb.innerJoin("article_tag_x_ref AS refs", "refs.a_id = id")
             qb.appendWhere("refs.t_id = '$search'")
@@ -141,6 +141,7 @@ class QueryBuilder(){
 
     fun innerJoin(table: String, on: String): QueryBuilder{
         if (joinTables.isNullOrEmpty()) joinTables = "INNER JOIN $table ON $on "
+        else joinTables += "INNER JOIN $table ON $on "
         return this
     }
 
@@ -148,7 +149,7 @@ class QueryBuilder(){
         check(table != null) {"table must be not null"}
         val strBuilder = StringBuilder("SELECT ")
             .append("$selectColumns ")
-            .append("FROM $table")
+            .append("FROM $table ")
 
         if (joinTables != null) strBuilder.append(joinTables)
         if (whereCondition != null) strBuilder.append(whereCondition)

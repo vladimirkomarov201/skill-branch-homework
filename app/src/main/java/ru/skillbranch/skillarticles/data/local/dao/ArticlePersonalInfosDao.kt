@@ -37,7 +37,7 @@ interface ArticlePersonalInfosDao: BaseDao<ArticlePersonalInfo> {
 
     @Transaction
     fun toggleBookmarkOrInsert(articleId: String){
-        if (toggleBookmark(articleId) == 0) insert(ArticlePersonalInfo(articleId = articleId, isLike = true))
+        if (toggleBookmark(articleId) == 0) insert(ArticlePersonalInfo(articleId = articleId, isBookmark = true))
     }
 
     @Transaction
