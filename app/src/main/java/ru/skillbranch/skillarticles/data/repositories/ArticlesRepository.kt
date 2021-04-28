@@ -135,7 +135,7 @@ class QueryBuilder(){
 
     fun appendWhere(condition: String, logic: String = "AND"): QueryBuilder{
         if (whereCondition.isNullOrEmpty()) whereCondition = "WHERE $condition "
-        else whereCondition += "$logic $condition"
+        else whereCondition += "$logic $condition "
         return this
     }
 
