@@ -96,11 +96,7 @@
                 android:defaultValue="-1"
                 app:argType="integer" />
         </fragment>
-        <fragment
-            android:id="@+id/page_privacy_policy"
-            android:name="ru.skillbranch.skillarticles.ui.auth.PrivacyPolicyFragment"
-            android:label="@string/title_privacy_policy"
-            tools:layout="@layout/fragment_privacy_policy" />
+
     </navigation>
 
     <!--global actions -->
