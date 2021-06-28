@@ -20,8 +20,9 @@ class SearchViewModel(
     fun initState() {
         useCase.getDishes()
             .map { dishes -> mapper.mapDtoToState(dishes) }
+            .doOnSubscribe { action.postValue(SearchState.Loading) }
             .subscribe({
-                val newState = SearchState(it)
+                val newState = SearchState.Result(it)
                 action.value = newState
             }, {
                 it.printStackTrace()
@@ -34,9 +35,10 @@ class SearchViewModel(
             .distinctUntilChanged()
             .switchMap { useCase.findDishesByName(it) }
             .map { mapper.mapDtoToState(it) }
+            .doOnSubscribe { action.postValue(SearchState.Loading) }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                val newState = SearchState(it)
+                val newState = SearchState.Result(it)
                 action.value = newState
             }, {
                 it.printStackTrace()
