@@ -5,13 +5,17 @@ import androidx.lifecycle.MutableLiveData
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import ru.skillbranch.sbdelivery.core.BaseViewModel
+import ru.skillbranch.sbdelivery.core.adapter.ProductItemState
+import ru.skillbranch.sbdelivery.core.notifier.BasketNotifier
+import ru.skillbranch.sbdelivery.core.notifier.event.BasketEvent
 import ru.skillbranch.sbdelivery.domain.SearchUseCase
 import ru.skillbranch.sbdelivery.repository.mapper.DishesMapper
 import java.util.concurrent.TimeUnit
 
 class SearchViewModel(
     private val useCase: SearchUseCase,
-    private val mapper: DishesMapper
+    private val mapper: DishesMapper,
+    private val notifier: BasketNotifier
 ) : BaseViewModel() {
     private val action = MutableLiveData<SearchState>()
     val state: LiveData<SearchState>
@@ -42,8 +46,13 @@ class SearchViewModel(
                 action.value = newState
             }, {
                 it.printStackTrace()
+
             }).track()
 
+    }
+
+    fun handleAddBasket(item: ProductItemState) {
+        notifier.putDishes(BasketEvent.AddDish(item.id, item.title, item.price))
     }
 
 }

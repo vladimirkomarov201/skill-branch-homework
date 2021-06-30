@@ -36,6 +36,6 @@ object AppModule {
 
     fun viewModelModule() = module {
         viewModel { MainViewModel(repository = get(), dishesMapper = get(), categoriesMapper = get(), notifier = get()) }
-        viewModel { SearchViewModel(useCase = get(), mapper = get()) }
+        viewModel { SearchViewModel(useCase = get(), mapper = get(), notifier = get()) }
     }
 }

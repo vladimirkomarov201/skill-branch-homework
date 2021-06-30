@@ -22,7 +22,7 @@ class SearchFragment : Fragment() {
     private val binding get() = _binding!!
     private val adapter by lazy {
         ProductDelegate().createAdapter {
-            // TODO handle click
+            viewModel.handleAddBasket(it)
         }
     }
 

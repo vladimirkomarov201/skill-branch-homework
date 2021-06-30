@@ -8,4 +8,6 @@ sealed class SearchState{
 
     data class Result(val items: List<ProductItemState>): SearchState()
 
+    data class Error(val errorDescription:String): SearchState()
+
 }
