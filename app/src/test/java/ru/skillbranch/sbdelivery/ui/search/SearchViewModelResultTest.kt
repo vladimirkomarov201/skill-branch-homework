@@ -16,6 +16,7 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import ru.skillbranch.sbdelivery.MockDataHolder
 import ru.skillbranch.sbdelivery.RxImmediateSchedulerRule
+import ru.skillbranch.sbdelivery.core.notifier.BasketNotifier
 import ru.skillbranch.sbdelivery.domain.SearchUseCase
 import ru.skillbranch.sbdelivery.domain.entity.DishEntity
 import ru.skillbranch.sbdelivery.repository.mapper.DishesMapper
@@ -40,11 +41,12 @@ class SearchViewModelResultTest {
 
     private val mapper: DishesMapper = mock()
     private val useCase: SearchUseCase = mock()
+    private val notifier: BasketNotifier = mock()
     private lateinit var viewModel: SearchViewModel
 
     @Before
     fun setUp() {
-        viewModel = SearchViewModel(useCase, mapper)
+        viewModel = SearchViewModel(useCase, mapper, notifier)
     }
 
     @Test

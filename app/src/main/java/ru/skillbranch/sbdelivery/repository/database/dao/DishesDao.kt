@@ -4,7 +4,9 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import ru.skillbranch.sbdelivery.domain.entity.DishEntity
 import ru.skillbranch.sbdelivery.repository.database.entity.DishPersistEntity
 
 @Dao
@@ -14,4 +16,8 @@ interface DishesDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertDishes(dishes: List<DishPersistEntity>)
+
+    @Query("SELECT * FROM dishes_table WHERE name LIKE :searchText ORDER BY name ASC")
+    fun findDishesByName(searchText: String): Observable<List<DishEntity>>
+
 }
