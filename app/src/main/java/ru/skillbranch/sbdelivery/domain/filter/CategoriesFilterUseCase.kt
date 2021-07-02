@@ -14,7 +14,7 @@ class CategoriesFilterUseCase(private val repository: DishesRepositoryContract) 
                 Observable.fromIterable(it)
             }
             .filter {
-                it.categoryId == categoryId
+                it.categoryId == categoryId || categoryId.isEmpty()
             }
             .toList()
             .flatMap {

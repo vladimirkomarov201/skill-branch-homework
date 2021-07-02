@@ -33,7 +33,9 @@ class DishesRepository(
 
 
     override fun getCachedDishes(): Single<List<DishEntity>> {
-        return dishesDao.getAllDishes().map { mapper.mapPersistToEntity(it) }
+        return dishesDao.getAllDishes().map {
+            mapper.mapPersistToEntity(it)
+        }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }

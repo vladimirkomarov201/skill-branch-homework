@@ -30,6 +30,7 @@ class SearchViewModel(
                 action.value = newState
             }, {
                 it.printStackTrace()
+                action.value = SearchState.Error(it.message.orEmpty())
             }).track()
     }
 
@@ -46,7 +47,7 @@ class SearchViewModel(
                 action.value = newState
             }, {
                 it.printStackTrace()
-
+                action.value = SearchState.Error(it.message.orEmpty())
             }).track()
 
     }
