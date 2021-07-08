@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import kotlinx.coroutines.flow.Flow
 import ru.skillbranch.sbdelivery.data.db.entity.DishPersist
 
 @Dao
@@ -20,6 +19,9 @@ interface DishesDao {
 
     @Query("SELECT * FROM dishes WHERE name LIKE '%' || :searchText || '%' ORDER BY name ASC")
     suspend fun findDishesFrom(searchText: String): List<DishPersist>
+
+    @Query("SELECT COUNT(*) FROM dishes WHERE name LIKE '%' || :searchText || '%'")
+    suspend fun dishesCounts(searchText: String): Int
 
     @Query("SELECT * FROM dishes WHERE id=:id")
     suspend fun findDish(id: String): DishPersist

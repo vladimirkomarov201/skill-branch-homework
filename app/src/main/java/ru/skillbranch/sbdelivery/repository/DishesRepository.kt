@@ -1,13 +1,10 @@
 package ru.skillbranch.sbdelivery.repository
 
-import kotlinx.coroutines.delay
 import ru.skillbranch.sbdelivery.data.db.dao.CartDao
 import ru.skillbranch.sbdelivery.data.db.dao.DishesDao
 import ru.skillbranch.sbdelivery.data.db.entity.CartItemPersist
 import ru.skillbranch.sbdelivery.data.network.RestService
 import ru.skillbranch.sbdelivery.data.network.res.DishRes
-import ru.skillbranch.sbdelivery.data.toDishItem
-import ru.skillbranch.sbdelivery.data.toDishPersist
 import ru.skillbranch.sbdelivery.screens.dishes.data.DishItem
 import javax.inject.Inject
 
@@ -33,7 +30,9 @@ class DishesRepository @Inject constructor(
             .map { it.toDishItem() }
     }
 
-    override suspend fun isEmptyDishes(): Boolean = true
+    override suspend fun isEmptyDishes(): Boolean {
+        return dishesDao.dishesCounts() == 0
+    }
 
     override suspend fun syncDishes() {
         val dishes = mutableListOf<DishRes>()
@@ -52,12 +51,20 @@ class DishesRepository @Inject constructor(
         dishesDao.findAllDishes().map { it.toDishItem() }
 
     override suspend fun findSuggestions(query: String): Map<String, Int> {
-        return mapOf(
-            "test" to 4,
-            "test2" to 2,
-            "test3" to 1,
-        )
-//        TODO("Not yet implemented")
+        val removeSpecialSymbolsRegex = "[\".,!?]".toRegex()
+        val suggestions = mutableListOf<String>()
+        dishesDao.findAllDishes().forEach {
+            suggestions.addAll(
+                it.name.split(" ").filter {
+                    it.contains(query, true)
+                }.map {
+                    removeSpecialSymbolsRegex.replace(it, "")
+                }
+            )
+        }
+        return suggestions.map {
+            it to dishesDao.dishesCounts(it)
+        }.toMap()
     }
 
     override suspend fun addDishToCart(id: String) {
