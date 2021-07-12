@@ -15,6 +15,7 @@ import org.junit.Before
 import org.junit.Test
 import ru.skillbranch.sbdelivery.data.db.dao.CartDao
 import ru.skillbranch.sbdelivery.data.network.RestService
+import ru.skillbranch.sbdelivery.data.toCartItem
 import ru.skillbranch.sbdelivery.repository.CartRepository
 import ru.skillbranch.sbdelivery.screens.cart.data.CartUiState
 import ru.skillbranch.sbdelivery.screens.cart.data.ConfirmDialogState

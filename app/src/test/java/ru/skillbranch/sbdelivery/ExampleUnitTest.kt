@@ -19,12 +19,12 @@ import ru.skillbranch.sbdelivery.data.db.dao.CartDao
 import ru.skillbranch.sbdelivery.data.db.dao.DishesDao
 import ru.skillbranch.sbdelivery.data.db.entity.CartItemPersist
 import ru.skillbranch.sbdelivery.data.network.RestService
+import ru.skillbranch.sbdelivery.data.toDishItem
 import ru.skillbranch.sbdelivery.repository.DishesRepository
+import ru.skillbranch.sbdelivery.screens.dish.logic.DishesEffectHandler
 import ru.skillbranch.sbdelivery.screens.dishes.data.DishesUiState
-import ru.skillbranch.sbdelivery.screens.dishes.logic.DishesEffectHandler
 import ru.skillbranch.sbdelivery.screens.dishes.logic.DishesFeature
 import ru.skillbranch.sbdelivery.screens.dishes.logic.selfReduce
-import ru.skillbranch.sbdelivery.screens.root.NavigateCommand
 import ru.skillbranch.sbdelivery.screens.root.logic.Eff
 import ru.skillbranch.sbdelivery.screens.root.logic.Msg
 
@@ -229,7 +229,7 @@ class ExampleUnitTest {
                 listOf(
                     DishesFeature.Eff.AddToCard(id = "test", title = "test"),
                     DishesFeature.Eff.AddToCard(id = "test2", title = "test2"),
-                    DishesFeature.Eff.RemoveFromCard(id = "test2", title = "test2"),
+                    DishesFeature.Eff.RemoveFromCart(id = "test2", title = "test2"),
                     DishesFeature.Eff.RemoveFromCard(id = "test", title = "test")
                 ).map(Eff::Dishes),
                 effs
@@ -244,7 +244,7 @@ class ExampleUnitTest {
                 Eff.Notification.Action(
                     "test успешно добавлен в корзину",
                     "Отмена",
-                    Msg.Dishes(DishesFeature.Msg.RemoveFromCard("test", "test"))
+                    Msg.Dishes(DishesFeature.Msg.RemoveFromCart("test", "test"))
                 )
             )
 

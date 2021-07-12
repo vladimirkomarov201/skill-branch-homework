@@ -22,7 +22,7 @@ import ru.skillbranch.sbdelivery.data.network.res.ReviewRes
 import ru.skillbranch.sbdelivery.repository.DishRepository
 import ru.skillbranch.sbdelivery.screens.dish.data.DishUiState
 import ru.skillbranch.sbdelivery.screens.dish.data.ReviewUiState
-import ru.skillbranch.sbdelivery.screens.dish.logic.DishEffectHandler
+import ru.skillbranch.sbdelivery.screens.dish.logic.DishesEffectHandler
 import ru.skillbranch.sbdelivery.screens.dish.logic.DishFeature
 import ru.skillbranch.sbdelivery.screens.dish.logic.selfReduce
 import ru.skillbranch.sbdelivery.screens.root.logic.Eff
@@ -73,7 +73,7 @@ class ExampleUnitTest2 {
         )
 
         TestCoroutineScope().launch {
-            feature.listenLocal(this, DishEffectHandler(repository, mockChannel))
+            feature.listenLocal(this, DishesEffectHandler(repository, mockChannel))
         }
 
         feature.test { states, _, _ ->
@@ -109,7 +109,7 @@ class ExampleUnitTest2 {
         )
 
         TestCoroutineScope().launch {
-            feature.listenLocal(this, DishEffectHandler(repository, mockChannel))
+            feature.listenLocal(this, DishesEffectHandler(repository, mockChannel))
         }
 
         runBlockingTest {
@@ -140,7 +140,7 @@ class ExampleUnitTest2 {
         )
 
         TestCoroutineScope().launch {
-            feature.listenLocal(this, DishEffectHandler(repository, mockChannel))
+            feature.listenLocal(this, DishesEffectHandler(repository, mockChannel))
         }
 
         runBlockingTest {
@@ -173,7 +173,7 @@ class ExampleUnitTest2 {
         )
 
         TestCoroutineScope().launch {
-            feature.listenLocal(this, DishEffectHandler(repository, mockChannel))
+            feature.listenLocal(this, DishesEffectHandler(repository, mockChannel))
         }
 
         runBlockingTest {
@@ -213,7 +213,7 @@ class ExampleUnitTest2 {
         )
 
         TestCoroutineScope().launch {
-            feature.listenLocal(this, DishEffectHandler(repository, mockChannel))
+            feature.listenLocal(this, DishesEffectHandler(repository, mockChannel))
         }
 
         runBlockingTest {
@@ -264,7 +264,7 @@ class ExampleUnitTest2 {
         )
 
         TestCoroutineScope().launch {
-            feature.listenLocal(this, DishEffectHandler(repository, mockChannel))
+            feature.listenLocal(this, DishesEffectHandler(repository, mockChannel))
         }
 
         runBlockingTest {

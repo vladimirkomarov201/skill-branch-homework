@@ -8,6 +8,7 @@ import ru.skillbranch.sbdelivery.screens.dishes.logic.DishesFeature
 import ru.skillbranch.sbdelivery.screens.root.logic.Eff
 import ru.skillbranch.sbdelivery.screens.root.logic.IEffectHandler
 import ru.skillbranch.sbdelivery.screens.root.logic.Msg
+import java.lang.IllegalStateException
 
 @ExperimentalCoroutinesApi
 class TestFeature<S, M, E>(

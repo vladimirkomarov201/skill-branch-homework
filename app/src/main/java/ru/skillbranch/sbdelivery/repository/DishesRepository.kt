@@ -5,6 +5,8 @@ import ru.skillbranch.sbdelivery.data.db.dao.DishesDao
 import ru.skillbranch.sbdelivery.data.db.entity.CartItemPersist
 import ru.skillbranch.sbdelivery.data.network.RestService
 import ru.skillbranch.sbdelivery.data.network.res.DishRes
+import ru.skillbranch.sbdelivery.data.toDishItem
+import ru.skillbranch.sbdelivery.data.toDishPersist
 import ru.skillbranch.sbdelivery.screens.dishes.data.DishItem
 import javax.inject.Inject
 
