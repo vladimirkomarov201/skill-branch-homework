@@ -7,6 +7,8 @@ import ru.skillbranch.sbdelivery.data.network.res.ReviewRes
 import ru.skillbranch.sbdelivery.data.toDishContent
 import ru.skillbranch.sbdelivery.screens.dish.data.DishContent
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 interface IDishRepository {
@@ -33,8 +35,15 @@ class DishRepository @Inject constructor(
     }
 
     override suspend fun loadReviews(dishId: String): List<ReviewRes> {
-        //TODO
-        return emptyList()
+        return api.getReviews(dishId).map {
+            val dateFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+            ReviewRes(
+                name = it.author,
+                date = dateFormatter.parse(it.date).time,
+                rating = it.rating,
+                message = it.text
+            )
+        }
     }
 
     override suspend fun sendReview(id: String, rating: Int, review: String): ReviewRes {

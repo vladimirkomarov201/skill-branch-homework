@@ -2,10 +2,7 @@ package ru.skillbranch.sbdelivery.data.network
 
 import retrofit2.Response
 import retrofit2.http.*
-import ru.skillbranch.sbdelivery.data.network.res.CategoryRes
-import ru.skillbranch.sbdelivery.data.network.res.DishRes
-import ru.skillbranch.sbdelivery.data.network.res.RefreshToken
-import ru.skillbranch.sbdelivery.data.network.res.Token
+import ru.skillbranch.sbdelivery.data.network.res.*
 
 interface RestService {
 
@@ -26,5 +23,8 @@ interface RestService {
         @Query("limit") limit: Int
     ): List<CategoryRes>
 
+    @GET("reviews/{dishId}")
+    @Headers("If-Modified-Since: Mon, 1 Jun 2020 08:00:00 GMT")
+    suspend fun getReviews( @Path("dishId") dishId: String): List<ReviewDto>
 
 }
